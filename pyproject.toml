@@ -1,0 +1,32 @@
+[project]
+name = "irouter"
+version = "0.1.0"
+description = "Easy access to 100s of LLMs with a few lines of code (using Openrouter)."
+authors = [
+    {name = "Carlo Lepelaars", email = "info@carlolepelaars.nl"},
+]
+license = {text = "MIT License"}
+readme = "README.MD"
+requires-python = ">=3.10,<4"
+
+dependencies = [
+    "openai",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff",
+    "mkdocs>=1.4.2",
+    "mkdocs-material>=8.5.11",
+    "mkdocstrings-python>=1.7.1",
+    "pytest>=7.2.0",
+    "griffe>=0.36.4",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
