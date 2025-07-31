@@ -1,5 +1,5 @@
 # irouter
-Access 100's of (free) LLMs with a few lines of code.
+Access 100s of LLMs with 2 lines of code.
 
 ## Installation
 
@@ -39,7 +39,7 @@ c = Call(model="moonshotai/kimi-k2:free", api_key="your_api_key")
 ```python
 from irouter import Call
 c = Call(model="moonshotai/kimi-k2:free")
-c ("Who are you?")
+c("Who are you?")
 # "I'm Kimi, your AI friend from Moonshot AI. I'm here to chat, answer your questions, and help you out whenever you need it."
 ```
 
