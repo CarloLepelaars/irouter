@@ -762,67 +762,70 @@
 
 
 <h1 id="irouter">irouter</h1>
-<p>Access 100's of (free) LLMs with only a few lines of code</p>
+<p>Access 100's of (free) LLMs with a few lines of code.</p>
 <h2 id="installation">Installation</h2>
-<p>1.Install <code>irouter</code> from PyPI:</p>
+<ol>
+<li>Install <code>irouter</code> from PyPI:</li>
+</ol>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pip<span class="w"> </span>install<span class="w"> </span>irouter
 </code></pre></div>
 <ol>
-<li>Create an account and generate an API key on <a href="https://openrouter.ai/settings/keys">OpenRouter</a>.</li>
+<li>Create an account on <a href="https://openrouter.ai">OpenRouter</a> and generate an API key.</li>
 </ol>
-<p>3a. Set the API key as an environment variable (recommended):</p>
+<p>3a. (recommended!) Set the OpenRouter API key as an environment variable:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OPENROUTER_API_KEY</span><span class="o">=</span>your_api_key
 </code></pre></div>
-<p>3b. Pass <code>api_key</code> to <code>irouter</code> objects like <code>Call</code> and <code>Chat</code>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">irouter</span><span class="w"> </span><span class="kn">import</span> <span class="n">Call</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">call</span> <span class="o">=</span> <span class="n">Call</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;moonshotai/kimi-k2:free&quot;</span><span class="p">,</span> <span class="n">api_key</span><span class="o">=</span><span class="s2">&quot;your_api_key&quot;</span><span class="p">)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">c</span> <span class="o">=</span> <span class="n">Call</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;moonshotai/kimi-k2:free&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>3b. Pass <code>api_key</code> to <code>irouter</code> objects like <code>Call</code> and <code>Chat</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">irouter</span><span class="w"> </span><span class="kn">import</span> <span class="n">Call</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">c</span> <span class="o">=</span> <span class="n">Call</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;moonshotai/kimi-k2:free&quot;</span><span class="p">,</span> <span class="n">api_key</span><span class="o">=</span><span class="s2">&quot;your_api_key&quot;</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="usage">Usage</h2>
 <h3 id="call">Call</h3>
 <p><code>Call</code> is the simplest interface to call one or more LLMs. To track message history and token usage, use <code>Chat</code>. </p>
 <h4 id="single-llm">Single LLM</h4>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">irouter</span><span class="w"> </span><span class="kn">import</span> <span class="n">Call</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">c</span> <span class="o">=</span> <span class="n">Call</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;moonshotai/kimi-k2:free&quot;</span><span class="p">)</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">c</span> <span class="p">(</span><span class="s2">&quot;Who are you?&quot;</span><span class="p">)</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># &quot;I&#39;m Kimi, your AI friend from Moonshot AI. I&#39;m here to chat, answer your questions, and help you out whenever you need it.&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">irouter</span><span class="w"> </span><span class="kn">import</span> <span class="n">Call</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">c</span> <span class="o">=</span> <span class="n">Call</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;moonshotai/kimi-k2:free&quot;</span><span class="p">)</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">c</span> <span class="p">(</span><span class="s2">&quot;Who are you?&quot;</span><span class="p">)</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># &quot;I&#39;m Kimi, your AI friend from Moonshot AI. I&#39;m here to chat, answer your questions, and help you out whenever you need it.&quot;</span>
 </code></pre></div>
 <h4 id="multiple-llms">Multiple LLMs</h4>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">irouter</span><span class="w"> </span><span class="kn">import</span> <span class="n">Call</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">c</span> <span class="o">=</span> <span class="n">Call</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;moonshotai/kimi-k2:free&quot;</span><span class="p">,</span> <span class="s2">&quot;google/gemini-2.0-flash-exp:free&quot;</span><span class="p">])</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">c</span><span class="p">(</span><span class="s2">&quot;Who are you?&quot;</span><span class="p">)</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># {&#39;moonshotai/kimi-k2:free&#39;: &quot;I&#39;m Kimi, your AI friend from Moonshot AI. I&#39;m here to chat, answer your questions, and help you out whenever you need it.&quot;,</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1">#  &#39;google/gemini-2.0-flash-exp:free&#39;: &#39;I am a large language model, trained by Google.\n&#39;}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">irouter</span><span class="w"> </span><span class="kn">import</span> <span class="n">Call</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="n">c</span> <span class="o">=</span> <span class="n">Call</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;moonshotai/kimi-k2:free&quot;</span><span class="p">,</span> <span class="s2">&quot;google/gemini-2.0-flash-exp:free&quot;</span><span class="p">])</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="n">c</span><span class="p">(</span><span class="s2">&quot;Who are you?&quot;</span><span class="p">)</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># {&#39;moonshotai/kimi-k2:free&#39;: &quot;I&#39;m Kimi, your AI friend from Moonshot AI. I&#39;m here to chat, answer your questions, and help you out whenever you need it.&quot;,</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1">#  &#39;google/gemini-2.0-flash-exp:free&#39;: &#39;I am a large language model, trained by Google.\n&#39;}</span>
 </code></pre></div>
 <p>For more information on <code>Call</code>, check out the <code>call.ipynb</code> notebook in the <code>nbs</code> folder.</p>
 <h3 id="chat">Chat</h3>
 <p><code>Chat</code> is an easy way to interface with one or more LLMs, while tracking message history and token usage.</p>
 <h3 id="single-llm_1">Single LLM</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">irouter</span><span class="w"> </span><span class="kn">import</span> <span class="n">Chat</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="n">c</span> <span class="o">=</span> <span class="n">Chat</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;moonshotai/kimi-k2:free&quot;</span><span class="p">)</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="n">c</span><span class="p">(</span><span class="s2">&quot;Who are you?&quot;</span><span class="p">)</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="nb">print</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">history</span><span class="p">)</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nb">print</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">usage</span><span class="p">)</span>
-</code></pre></div>
-<h3 id="multiple-llms_1">Multiple LLMs</h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">irouter</span><span class="w"> </span><span class="kn">import</span> <span class="n">Chat</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">c</span> <span class="o">=</span> <span class="n">Chat</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;moonshotai/kimi-k2:free&quot;</span><span class="p">,</span> <span class="s2">&quot;google/gemini-2.0-flash-exp:free&quot;</span><span class="p">])</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">c</span> <span class="o">=</span> <span class="n">Chat</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;moonshotai/kimi-k2:free&quot;</span><span class="p">)</span>
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="n">c</span><span class="p">(</span><span class="s2">&quot;Who are you?&quot;</span><span class="p">)</span>
 <a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="nb">print</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">history</span><span class="p">)</span>
 <a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nb">print</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">usage</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="multiple-llms_1">Multiple LLMs</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">irouter</span><span class="w"> </span><span class="kn">import</span> <span class="n">Chat</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="n">c</span> <span class="o">=</span> <span class="n">Chat</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;moonshotai/kimi-k2:free&quot;</span><span class="p">,</span> <span class="s2">&quot;google/gemini-2.0-flash-exp:free&quot;</span><span class="p">])</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="n">c</span><span class="p">(</span><span class="s2">&quot;Who are you?&quot;</span><span class="p">)</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="nb">print</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">history</span><span class="p">)</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="nb">print</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">usage</span><span class="p">)</span>
 </code></pre></div>
 <p>For more information on <code>Chat</code>, check out the <code>chat.ipynb</code> notebook in the <code>nbs</code> folder.</p>
 <h3 id="misc">Misc</h3>
 <h4 id="get_all_models"><code>get_all_models</code></h4>
 <p>You can easily see all 300+ models available with <code>irouter</code> through OpenRouter.ai using <code>get_all_models</code>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">irouter.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_all_models</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="n">get_all_models</span><span class="p">()</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">irouter.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_all_models</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="n">get_all_models</span><span class="p">()</span>
 </code></pre></div>
 <h2 id="credits">Credits</h2>
-<p>This project is built on top of <a href="https://openrouter.ai">OpenRouter.ai's</a> API infrastructure, which provides access to LLMs through a unified interface.</p>
-<p>This project is inspired by <a href="https://www.answer.ai">Answer.AI's</a> projects:
-- <a href="https://github.com/AnswerDotAI/cosette">cosette</a> - Lightweight LLM wrapper for OpenAI's API
-- <a href="https://github.com/AnswerDotAI/claudette">claudette</a> - Lightweight LLM wrapper for Anthropic's API</p>
-<p><code>irouter</code> generalizes this idea to support 100s of LLMs, which includes OpenAI and Anthropic models, thanks to OpenRouter's infrastructure.</p>
+<p>This project is built on top of the <a href="https://openrouter.ai">OpenRouter</a> API infrastructure, which provides access to LLMs through a unified interface.</p>
+<p>This project is inspired by <a href="https://www.answer.ai">Answer.AI's</a> projects like <a href="https://github.com/AnswerDotAI/cosette">cosette</a> and <a href="https://github.com/AnswerDotAI/claudette">claudette</a>.</p>
+<p><code>irouter</code> generalizes this idea to support 100s of LLMs, which includes OpenAI and Anthropic models and more, thanks to <a href="https://openrouter.ai">OpenRouter's</a> infrastructure.</p>
 
 
 
