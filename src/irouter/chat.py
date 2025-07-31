@@ -3,6 +3,7 @@ from .call import Call
 
 
 # TODO: Clean up and test usage.
+# TODO: Handle case where single model is used. History and message output should be simplified.
 class Chat:
     """Chat with history and usage tracking."""
 
@@ -28,12 +29,12 @@ class Chat:
             for m in self.model
         }
 
-    def __call__(self, message: str, extra_headers: dict = {}) -> str | list[str]:
+    def __call__(self, message: str | list[str], extra_headers: dict = {}) -> str | list[str]:
         """Send message and update history.
 
-        :param message: User message
+        :param message: User message or list of strings.
+        For example, if an image URL or bytes and text are passed, the image will be handled in the LLM call.
         :param extra_headers: Additional headers
-        :param text_output: Return text content if True, else message objects
         :returns: Single response or list based on model count
         """
         for model in self.model:
