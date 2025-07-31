@@ -1,7 +1,7 @@
 # irouter
 Access 100's of (free) LLMs with only a few lines of code
 
-# Installation
+## Installation
 
 1.Install `irouter` from PyPI:
 
@@ -22,6 +22,68 @@ export OPENROUTER_API_KEY=your_api_key
 ```python
 from irouter import Call
 call = Call(model="moonshotai/kimi-k2:free", api_key="your_api_key")
+```
+
+## Usage
+
+### Call
+
+`Call` is the simplest interface to call one or more LLMs. To track message history and token usage, use `Chat`. 
+
+#### Single LLM
+```python
+from irouter import Call
+c = Call(model="moonshotai/kimi-k2:free")
+c ("Who are you?")
+# "I'm Kimi, your AI friend from Moonshot AI. I'm here to chat, answer your questions, and help you out whenever you need it."
+```
+
+#### Multiple LLMs
+```python
+from irouter import Call
+c = Call(model=["moonshotai/kimi-k2:free", "google/gemini-2.0-flash-exp:free"])
+c("Who are you?")
+# {'moonshotai/kimi-k2:free': "I'm Kimi, your AI friend from Moonshot AI. I'm here to chat, answer your questions, and help you out whenever you need it.",
+#  'google/gemini-2.0-flash-exp:free': 'I am a large language model, trained by Google.\n'}
+```
+
+For more information on `Call`, check out the `call.ipynb` notebook in the `nbs` folder.
+
+### Chat
+
+`Chat` is an easy way to interface with one or more LLMs, while tracking message history and token usage.
+
+### Single LLM
+
+```python
+from irouter import Chat
+c = Chat(model="moonshotai/kimi-k2:free")
+c("Who are you?")
+print(c.history)
+print(c.usage)
+```
+
+### Multiple LLMs
+
+```python
+from irouter import Chat
+c = Chat(model=["moonshotai/kimi-k2:free", "google/gemini-2.0-flash-exp:free"])
+c("Who are you?")
+print(c.history)
+print(c.usage)
+```
+
+For more information on `Chat`, check out the `chat.ipynb` notebook in the `nbs` folder.
+
+### Misc
+
+#### `get_all_models`
+
+You can easily see all 300+ models available with `irouter` through OpenRouter.ai using `get_all_models`.
+
+```python
+from irouter.base import get_all_models
+get_all_models()
 ```
 
 ## Credits
