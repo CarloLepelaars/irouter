@@ -1,4 +1,8 @@
 site_name: irouter
+site_description: Access 100's of (free) LLMs with only a few lines of code
+repo_url: https://github.com/carlolepelaars/irouter
+repo_name: irouter
+
 theme:
   name: material
   palette:
@@ -7,18 +11,45 @@ theme:
   font:
     text: Ubuntu
   icon:
-    logo: material/library-shelves
+    logo: material/router
+    repo: fontawesome/brands/github
   features:
     - navigation.top
     - navigation.tabs
     - navigation.tracking
     - navigation.tabs.sticky
     - navigation.expand
+    - navigation.instant
+    - navigation.instant.prefetch
+    - search.highlight
+    - search.share
+    - content.code.copy
+    - content.code.annotate
+
 markdown_extensions:
   - footnotes
   - fenced_code
   - codehilite:
       linennums: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - admonition
+  - pymdownx.details
+  - pymdownx.snippets
+
+nav:
+  - Home: index.md
+  - Base: base.md
+  - Call: call.md
+  - Chat: chat.md
+  - Disclaimer: disclaimer.md
 
 plugins:
-  - mkdocstrings
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [src]
