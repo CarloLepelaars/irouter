@@ -23,3 +23,13 @@ export OPENROUTER_API_KEY=your_api_key
 from irouter import Call
 call = Call(model="moonshotai/kimi-k2:free", api_key="your_api_key")
 ```
+
+## Credits
+
+This project is built on top of [OpenRouter.ai's](https://openrouter.ai) API infrastructure, which provides access to LLMs through a unified interface.
+
+This project is inspired by [Answer.AI's](https://www.answer.ai) projects:
+- [cosette](https://github.com/AnswerDotAI/cosette) - Lightweight LLM wrapper for OpenAI's API
+- [claudette](https://github.com/AnswerDotAI/claudette) - Lightweight LLM wrapper for Anthropic's API
+
+`irouter` generalizes this idea to support 100s of LLMs, which includes OpenAI and Anthropic models, thanks to OpenRouter's infrastructure.

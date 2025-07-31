@@ -46,6 +46,7 @@ nav:
   - Base: base.md
   - Call: call.md
   - Chat: chat.md
+  - Contributing: contributing.md
   - Disclaimer: disclaimer.md
 
 plugins:
