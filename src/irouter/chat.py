@@ -1,6 +1,7 @@
 from fastcore.basics import listify
 from .call import Call
 
+
 # TODO: Clean up and test usage.
 class Chat:
     """Chat with history and usage tracking."""
@@ -27,9 +28,7 @@ class Chat:
             for m in self.model
         }
 
-    def __call__(
-        self, message: str, extra_headers: dict = {}
-    ) -> str | list[str]:
+    def __call__(self, message: str, extra_headers: dict = {}) -> str | list[str]:
         """Send message and update history.
 
         :param message: User message

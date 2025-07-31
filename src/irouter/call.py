@@ -42,8 +42,10 @@ class Call:
             {"role": "system", "content": self.system},
             {"role": "user", "content": message},
         ]
-        resps = {model: self._get_resp(model, inp, extra_headers, raw_completion)
-            for model in self.models}
+        resps = {
+            model: self._get_resp(model, inp, extra_headers, raw_completion)
+            for model in self.models
+        }
         return resps[self.models[0]] if len(self.models) == 1 else resps
 
     def _get_resp(
@@ -54,7 +56,7 @@ class Call:
         raw_completion: bool,
     ) -> str | ChatCompletion:
         """Get API response with merged headers.
-        
+
         :param model: Model name to use
         :param messages: Message list for completion
         :param extra_headers: Additional headers, overrides BASE_HEADERS if same keys are given.
