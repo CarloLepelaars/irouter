@@ -1,0 +1,71 @@
+import os
+from openai import OpenAI
+from openai.types.chat import ChatCompletion
+from fastcore.basics import listify
+
+from .base import BASE_URL, BASE_HEADERS
+
+
+class Call:
+    """One-off API calls without history and usage tracking."""
+
+    def __init__(
+        self,
+        model: str | list[str],
+        base_url: str = BASE_URL,
+        api_key: str = None,
+        system: str = "",
+    ):
+        """
+        :param model: Model(s) to use
+        :param base_url: API base URL. Default to Openrouter.
+        :param api_key: API key, defaults to `OPENROUTER_API_KEY`
+        :param system: System prompt
+        """
+        self.models = listify(model)
+        self.system = system
+        self.client = OpenAI(
+            api_key=api_key or os.getenv("OPENROUTER_API_KEY"), base_url=base_url
+        )
+
+    def __call__(
+        self, message: str, extra_headers: dict = {}, raw_completion: bool = False
+    ) -> str | dict[str, str] | ChatCompletion | dict[str, ChatCompletion]:
+        """Make API call.
+
+        :param message: User message
+        :param extra_headers: Additional headers for the Openrouter API
+        :param raw_completion: If True, returns the raw ChatCompletion object.
+        :returns: Single response or list based on model count
+        """
+        inp = [
+            {"role": "system", "content": self.system},
+            {"role": "user", "content": message},
+        ]
+        resps = {model: self._get_resp(model, inp, extra_headers, raw_completion)
+            for model in self.models}
+        return resps[self.models[0]] if len(self.models) == 1 else resps
+
+    def _get_resp(
+        self,
+        model: str,
+        messages: list[dict],
+        extra_headers: dict,
+        raw_completion: bool,
+    ) -> str | ChatCompletion:
+        """Get API response with merged headers.
+        
+        :param model: Model name to use
+        :param messages: Message list for completion
+        :param extra_headers: Additional headers, overrides BASE_HEADERS if same keys are given.
+        Overriding HTTP-Referer and X-Title in extra_headers can be useful if you want to implement your own site tracking on openrouter.ai.
+        :param raw_completion: Return raw response if True, else content string
+        :returns: Response content string or raw ChatCompletion object
+        """
+        headers = {**BASE_HEADERS, **extra_headers}
+        resp = self.client.chat.completions.create(
+            model=model,
+            messages=messages,
+            extra_headers=headers,
+        )
+        return resp if raw_completion else resp.choices[0].message.content
