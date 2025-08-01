@@ -12,6 +12,7 @@ def get_all_models(slug: bool = True) -> list[str]:
     """Get all models available in the Openrouter API.
 
     :param slug: If True get the slugs you need to initialize LLMs, else get the names of the LLMs.
+    :return: List of models.
     """
     data = urljson(f"{BASE_URL}/models")["data"]
     return [m["canonical_slug" if slug else "name"] for m in data]
@@ -26,6 +27,7 @@ def history_to_markdown(history: dict, ipython: bool = False) -> str:
 
     :param history: History from Chat object
     :param ipython: If true display as markdown in Jupyter notebooks.
+    :return: String showing the conversation history.
     """
     md = []
     for msg in history[next(iter(history))]:
