@@ -37,9 +37,11 @@ class Call:
         """Make API call.
 
         :param message: User message or list of message dicts.
+        If user message is provided, a system prompt is added.
+        If message dicts are provided, no additional system prompt is added.
         :param extra_headers: Additional headers for the Openrouter API
         :param raw: If True, returns the raw ChatCompletion object.
-        :returns: Single response or list based on model count
+        :returns: Single response or list based on model count.
         """
         inp = [{"role": "system", "content": self.system}, {"role": "user", "content": message}] if isinstance(message, str) else message
         resps = {
