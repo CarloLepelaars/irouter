@@ -23,8 +23,8 @@ class Chat:
         self.model = listify(model)
         self.call = Call(model, base_url, api_key)
         self.system = system
-        self.history = {m: [{"role": "system", "content": system}] for m in self.model}
-        self.usage = {
+        self._history = {m: [{"role": "system", "content": system}] for m in self.model}
+        self._usage = {
             m: {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0}
             for m in self.model
         }
@@ -38,24 +38,40 @@ class Chat:
         :returns: Single response or list based on model count
         """
         for model in self.model:
-            self.history[model].append({"role": "user", "content": message})
+            self._history[model].append({"role": "user", "content": message})
         resps = [
-            self.call._get_resp(model, self.history[model], extra_headers)
+            self.call._get_resp(model, self._history[model], extra_headers, raw=True)
             for model in self.model
         ]
 
         for model, resp in zip(self.model, resps):
             msg = resp.choices[0].message
-            self.history[model].append({"role": "assistant", "content": msg.content})
+            self._history[model].append({"role": "assistant", "content": msg.content})
             if hasattr(resp, "usage") and resp.usage:
                 usage = resp.usage
-                self.usage[model]["prompt_tokens"] += usage.prompt_tokens
-                self.usage[model]["completion_tokens"] += usage.completion_tokens
-                self.usage[model]["total_tokens"] += usage.total_tokens
+                self._usage[model]["prompt_tokens"] += usage.prompt_tokens
+                self._usage[model]["completion_tokens"] += usage.completion_tokens
+                self._usage[model]["total_tokens"] += usage.total_tokens
 
         outputs = [resp.choices[0].message.content for resp in resps]
 
         return outputs[0] if len(self.model) == 1 else outputs
+    
+    @property
+    def history(self) -> list[dict] | dict[str, list[dict]]:
+        """Get history for a model. 
+        If single model is used, return the history for that model (list of dicts).
+        If multiple models are used, return a dict mapping model to history.
+        """
+        return self._history if len(self.model) > 1 else self._history[self.model[0]]
+    
+    @property
+    def usage(self) -> dict[str, dict[str, int]] | dict[str, int]:
+        """Get usage for a model.
+        If single model is used, return the usage for that model (dict).
+        If multiple models are used, return a dict mapping model to usage.
+        """
+        return self._usage if len(self.model) > 1 else self._usage[self.model[0]]
 
     # TODO: Add streaming
     # TODO: Add tool usage support
