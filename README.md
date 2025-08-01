@@ -1,4 +1,11 @@
 # irouter
+
+![](https://img.shields.io/pypi/dm/irouter)
+![Python Version](https://img.shields.io/badge/dynamic/toml?url=https://raw.githubusercontent.com/carlolepelaars/irouter/master/pyproject.toml&query=%24.project%5B%22requires-python%22%5D&label=python&color=blue) 
+[![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+
+
 Access 100s of LLMs with 2 lines of code.
 
 ## Installation
@@ -84,7 +91,7 @@ For more information on `Chat`, check out the `chat.ipynb` notebook in the `nbs`
 
 #### `get_all_models`
 
-You can easily see all 300+ models available with `irouter` through OpenRouter.ai using `get_all_models`.
+You can easily get all 300+ models available with `irouter` using `get_all_models`.
 
 ```python
 from irouter.base import get_all_models
