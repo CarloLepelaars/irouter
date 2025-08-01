@@ -1,5 +1,6 @@
 from unittest.mock import patch, MagicMock, Mock
 from irouter.chat import Chat
+from irouter.base import BASE_URL
 
 
 def test_single_model_response():
@@ -17,6 +18,7 @@ def test_single_model_response():
         mock_call_class.return_value = mock_call
 
         chat = Chat("test-model", system="Test system")
+        assert chat.base_url == BASE_URL
 
         assert chat.system == "Test system"
         assert chat.history == [{"role": "system", "content": "Test system"}]

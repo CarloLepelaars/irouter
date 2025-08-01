@@ -1,4 +1,6 @@
 from unittest.mock import patch, MagicMock
+
+from irouter.base import BASE_URL
 from irouter.call import Call
 
 
@@ -13,6 +15,7 @@ def test_call():
         mock_openai.return_value = mock_client
 
         call = Call("test-model", system="Test system")
+        assert call.base_url == BASE_URL
 
         result = call("Hello world")
         assert result == "Test response"

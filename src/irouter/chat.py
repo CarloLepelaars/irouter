@@ -1,5 +1,6 @@
-from fastcore.basics import listify
+from fastcore.basics import listify, store_attr
 from .call import Call
+from .base import BASE_URL
 
 
 class Chat:
@@ -9,7 +10,7 @@ class Chat:
         self,
         model: str | list[str],
         system: str = "You are a helpful assistant.",
-        base_url: str = None,
+        base_url: str = BASE_URL,
         api_key: str = None,
     ):
         """
@@ -18,9 +19,11 @@ class Chat:
         :param base_url: API base URL
         :param api_key: API key, defaults to OPENROUTER_API_KEY env var
         """
+        store_attr()
         self.model = listify(model)
-        self.call = Call(model, base_url, api_key)
+        self.base_url = base_url
         self.system = system
+        self.call = Call(model, base_url, api_key, system)
         self._history = {m: [{"role": "system", "content": system}] for m in self.model}
         self._usage = {
             m: {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0}

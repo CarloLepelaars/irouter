@@ -1,7 +1,7 @@
 import os
 from openai import OpenAI
 from openai.types.chat import ChatCompletion
-from fastcore.basics import listify
+from fastcore.basics import listify, store_attr
 
 from .base import BASE_URL, BASE_HEADERS
 
@@ -23,10 +23,12 @@ class Call:
         :param system: System prompt
         """
         self.models = listify(model)
+        self.base_url = base_url
         self.system = system
         self.client = OpenAI(
             api_key=api_key or os.getenv("OPENROUTER_API_KEY"), base_url=base_url
         )
+
 
     # TODO: Add Streaming support.
     # TODO: Add support for tool usage.
