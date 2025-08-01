@@ -74,7 +74,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#chat-module" class="md-skip">
+        <a href="#chat" class="md-skip">
           Skip to content
         </a>
       
@@ -433,65 +433,47 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#classes" class="md-nav__link">
+  <a href="#quick-start" class="md-nav__link">
     <span class="md-ellipsis">
-      Classes
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Classes">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#chat" class="md-nav__link">
-    <span class="md-ellipsis">
-      Chat
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Chat">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#methods" class="md-nav__link">
-    <span class="md-ellipsis">
-      Methods
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Methods">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#init" class="md-nav__link">
-    <span class="md-ellipsis">
-      init
+      Quick Start
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#call" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#single-model-usage" class="md-nav__link">
     <span class="md-ellipsis">
-      call
+      Single Model Usage
     </span>
   </a>
   
 </li>
-        
-      </ul>
-    </nav>
+      
+        <li class="md-nav__item">
+  <a href="#multiple-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multiple Models
+    </span>
+  </a>
   
 </li>
-        
-      </ul>
-    </nav>
+      
+        <li class="md-nav__item">
+  <a href="#managing-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      Managing State
+    </span>
+  </a>
   
 </li>
-        
-      </ul>
-    </nav>
+      
+        <li class="md-nav__item">
+  <a href="#comparison-with-call" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comparison with Call
+    </span>
+  </a>
   
 </li>
       
@@ -574,65 +556,47 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#classes" class="md-nav__link">
+  <a href="#quick-start" class="md-nav__link">
     <span class="md-ellipsis">
-      Classes
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Classes">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#chat" class="md-nav__link">
-    <span class="md-ellipsis">
-      Chat
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Chat">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#methods" class="md-nav__link">
-    <span class="md-ellipsis">
-      Methods
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Methods">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#init" class="md-nav__link">
-    <span class="md-ellipsis">
-      init
+      Quick Start
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#call" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#single-model-usage" class="md-nav__link">
     <span class="md-ellipsis">
-      call
+      Single Model Usage
     </span>
   </a>
   
 </li>
-        
-      </ul>
-    </nav>
+      
+        <li class="md-nav__item">
+  <a href="#multiple-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multiple Models
+    </span>
+  </a>
   
 </li>
-        
-      </ul>
-    </nav>
+      
+        <li class="md-nav__item">
+  <a href="#managing-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      Managing State
+    </span>
+  </a>
   
 </li>
-        
-      </ul>
-    </nav>
+      
+        <li class="md-nav__item">
+  <a href="#comparison-with-call" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comparison with Call
+    </span>
+  </a>
   
 </li>
       
@@ -655,13 +619,68 @@
   
 
 
-<h1 id="chat-module">Chat Module</h1>
-<p>Chat with history and usage tracking capabilities.</p>
-<h2 id="classes">Classes</h2>
-<h3 id="chat">Chat</h3>
-<h4 id="methods">Methods</h4>
-<h5 id="init"><strong>init</strong></h5>
-<h5 id="call"><strong>call</strong></h5>
+<h1 id="chat">Chat</h1>
+<p>Conversational LLM interactions with history and token usage tracking.</p>
+<h2 id="quick-start">Quick Start</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">irouter</span><span class="w"> </span><span class="kn">import</span> <span class="n">Chat</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dotenv</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">load_dotenv</span><span class="p">()</span>  <span class="c1"># Load OPENROUTER_API_KEY from .env</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># Single model with system prompt</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="n">c</span> <span class="o">=</span> <span class="n">Chat</span><span class="p">(</span><span class="s2">&quot;moonshotai/kimi-k2:free&quot;</span><span class="p">,</span> <span class="n">system</span><span class="o">=</span><span class="s2">&quot;You are the best assistant.&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="n">response</span> <span class="o">=</span> <span class="n">c</span><span class="p">(</span><span class="s2">&quot;Who created you?&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="nb">print</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">history</span><span class="p">)</span>  <span class="c1"># View conversation history</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="nb">print</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">usage</span><span class="p">)</span>    <span class="c1"># View token usage</span>
+</code></pre></div>
+<h2 id="single-model-usage">Single Model Usage</h2>
+<p>Initialize with system prompt:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">c</span> <span class="o">=</span> <span class="n">Chat</span><span class="p">(</span><span class="s2">&quot;moonshotai/kimi-k2:free&quot;</span><span class="p">,</span> <span class="n">system</span><span class="o">=</span><span class="s2">&quot;You are helpful.&quot;</span><span class="p">)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># or with explicit API key</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">c</span> <span class="o">=</span> <span class="n">Chat</span><span class="p">(</span><span class="s2">&quot;moonshotai/kimi-k2:free&quot;</span><span class="p">,</span> <span class="n">api_key</span><span class="o">=</span><span class="s2">&quot;your_api_key&quot;</span><span class="p">)</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Initial state</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="nb">print</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">history</span><span class="p">)</span>  <span class="c1"># [{&#39;role&#39;: &#39;system&#39;, &#39;content&#39;: &#39;You are helpful.&#39;}]</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="nb">print</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">usage</span><span class="p">)</span>    <span class="c1"># {&#39;prompt_tokens&#39;: 0, &#39;completion_tokens&#39;: 0, &#39;total_tokens&#39;: 0}</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Make a call</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="n">response</span> <span class="o">=</span> <span class="n">c</span><span class="p">(</span><span class="s2">&quot;Who created you?&quot;</span><span class="p">)</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># Updated state</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="nb">print</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">history</span><span class="p">)</span>  <span class="c1"># Full conversation history</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="nb">print</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">usage</span><span class="p">)</span>    <span class="c1"># Updated token counts</span>
+</code></pre></div>
+<h2 id="multiple-models">Multiple Models</h2>
+<p>Track separate conversations with multiple models:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">models</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;moonshotai/kimi-k2:free&quot;</span><span class="p">,</span> <span class="s2">&quot;z-ai/glm-4.5-air:free&quot;</span><span class="p">]</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">c</span> <span class="o">=</span> <span class="n">Chat</span><span class="p">(</span><span class="n">models</span><span class="p">,</span> <span class="n">system</span><span class="o">=</span><span class="s2">&quot;You are the best assistant.&quot;</span><span class="p">)</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Each model has separate history and usage</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nb">print</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">history</span><span class="p">)</span>  <span class="c1"># Dict mapping model -&gt; history</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="nb">print</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">usage</span><span class="p">)</span>    <span class="c1"># Dict mapping model -&gt; usage</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="n">responses</span> <span class="o">=</span> <span class="n">c</span><span class="p">(</span><span class="s2">&quot;Who created you?&quot;</span><span class="p">)</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Returns: {&quot;moonshotai/kimi-k2:free&quot;: &quot;...&quot;, &quot;z-ai/glm-4.5-air:free&quot;: &quot;...&quot;}</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Access specific model data</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="nb">print</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">history</span><span class="p">[</span><span class="s2">&quot;moonshotai/kimi-k2:free&quot;</span><span class="p">])</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="nb">print</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">usage</span><span class="p">[</span><span class="s2">&quot;moonshotai/kimi-k2:free&quot;</span><span class="p">])</span>
+</code></pre></div>
+<h2 id="managing-state">Managing State</h2>
+<p>Reset conversation history:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">c</span><span class="o">.</span><span class="n">reset_history</span><span class="p">()</span>  <span class="c1"># Reverts to system prompt only</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">print</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">history</span><span class="p">)</span>   <span class="c1"># Back to initial state</span>
+</code></pre></div>
+<p>Reset token usage:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">c</span><span class="o">.</span><span class="n">reset_usage</span><span class="p">()</span>    <span class="c1"># Resets counters to zero</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">print</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">usage</span><span class="p">)</span>     <span class="c1"># {&#39;prompt_tokens&#39;: 0, &#39;completion_tokens&#39;: 0, &#39;total_tokens&#39;: 0}</span>
+</code></pre></div>
+<h2 id="comparison-with-call">Comparison with Call</h2>
+<ul>
+<li><strong>Call</strong>: One-off requests, no state tracking</li>
+<li><strong>Chat</strong>: Multi-turn conversations, maintains history and usage statistics</li>
+</ul>
+<p>Use <code>Chat</code> when you need persistent conversations or want to track token consumption across multiple interactions.</p>
 
 
 

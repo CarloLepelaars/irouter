@@ -74,7 +74,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#call-module" class="md-skip">
+        <a href="#call" class="md-skip">
           Skip to content
         </a>
       
@@ -411,74 +411,38 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#classes" class="md-nav__link">
+  <a href="#quick-start" class="md-nav__link">
     <span class="md-ellipsis">
-      Classes
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Classes">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#call" class="md-nav__link">
-    <span class="md-ellipsis">
-      Call
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Call">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#methods" class="md-nav__link">
-    <span class="md-ellipsis">
-      Methods
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Methods">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#init" class="md-nav__link">
-    <span class="md-ellipsis">
-      init
+      Quick Start
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#call_1" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#single-model-usage" class="md-nav__link">
     <span class="md-ellipsis">
-      call
+      Single Model Usage
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#_get_resp" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#multiple-models" class="md-nav__link">
     <span class="md-ellipsis">
-      _get_resp
+      Multiple Models
     </span>
   </a>
   
 </li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-      </ul>
-    </nav>
+      
+        <li class="md-nav__item">
+  <a href="#message-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      Message Format
+    </span>
+  </a>
   
 </li>
       
@@ -583,74 +547,38 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#classes" class="md-nav__link">
+  <a href="#quick-start" class="md-nav__link">
     <span class="md-ellipsis">
-      Classes
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Classes">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#call" class="md-nav__link">
-    <span class="md-ellipsis">
-      Call
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Call">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#methods" class="md-nav__link">
-    <span class="md-ellipsis">
-      Methods
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Methods">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#init" class="md-nav__link">
-    <span class="md-ellipsis">
-      init
+      Quick Start
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#call_1" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#single-model-usage" class="md-nav__link">
     <span class="md-ellipsis">
-      call
+      Single Model Usage
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#_get_resp" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#multiple-models" class="md-nav__link">
     <span class="md-ellipsis">
-      _get_resp
+      Multiple Models
     </span>
   </a>
   
 </li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-      </ul>
-    </nav>
+      
+        <li class="md-nav__item">
+  <a href="#message-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      Message Format
+    </span>
+  </a>
   
 </li>
       
@@ -673,14 +601,55 @@
   
 
 
-<h1 id="call-module">Call Module</h1>
-<p>One-off API calls without history and usage tracking.</p>
-<h2 id="classes">Classes</h2>
-<h3 id="call">Call</h3>
-<h4 id="methods">Methods</h4>
-<h5 id="init"><strong>init</strong></h5>
-<h5 id="call_1"><strong>call</strong></h5>
-<h5 id="_get_resp">_get_resp</h5>
+<h1 id="call">Call</h1>
+<p>Simple one-off LLM calls without history or token tracking.</p>
+<h2 id="quick-start">Quick Start</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">irouter</span><span class="w"> </span><span class="kn">import</span> <span class="n">Call</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dotenv</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">load_dotenv</span><span class="p">()</span>  <span class="c1"># Load OPENROUTER_API_KEY from .env</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># Single model</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="n">c</span> <span class="o">=</span> <span class="n">Call</span><span class="p">(</span><span class="s2">&quot;moonshotai/kimi-k2:free&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="n">response</span> <span class="o">=</span> <span class="n">c</span><span class="p">(</span><span class="s2">&quot;Who played guitar on Steely Dan&#39;s Kid Charlemagne?&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="single-model-usage">Single Model Usage</h2>
+<p>Initialize with a model slug:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">c</span> <span class="o">=</span> <span class="n">Call</span><span class="p">(</span><span class="s2">&quot;moonshotai/kimi-k2:free&quot;</span><span class="p">)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># or with explicit API key</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">c</span> <span class="o">=</span> <span class="n">Call</span><span class="p">(</span><span class="s2">&quot;moonshotai/kimi-k2:free&quot;</span><span class="p">,</span> <span class="n">api_key</span><span class="o">=</span><span class="s2">&quot;your_api_key&quot;</span><span class="p">)</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="n">response</span> <span class="o">=</span> <span class="n">c</span><span class="p">(</span><span class="s2">&quot;Your question here&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>Get raw ChatCompletion object:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">raw_response</span> <span class="o">=</span> <span class="n">c</span><span class="p">(</span><span class="s2">&quot;Your question&quot;</span><span class="p">,</span> <span class="n">raw</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">print</span><span class="p">(</span><span class="n">raw_response</span><span class="o">.</span><span class="n">usage</span><span class="p">)</span>  <span class="c1"># Token usage info</span>
+</code></pre></div>
+<h2 id="multiple-models">Multiple Models</h2>
+<p>Call multiple models simultaneously:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">models</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;moonshotai/kimi-k2:free&quot;</span><span class="p">,</span> <span class="s2">&quot;google/gemma-3n-e2b-it:free&quot;</span><span class="p">]</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">mc</span> <span class="o">=</span> <span class="n">Call</span><span class="p">(</span><span class="n">models</span><span class="p">)</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="n">responses</span> <span class="o">=</span> <span class="n">mc</span><span class="p">(</span><span class="s2">&quot;Who played guitar on Kid Charlemagne?&quot;</span><span class="p">)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Returns: {&quot;moonshotai/kimi-k2:free&quot;: &quot;Larry Carlton&quot;, &quot;google/gemma-3n-e2b-it:free&quot;: &quot;David Spengler&quot;}</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Access specific model response</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="nb">print</span><span class="p">(</span><span class="n">responses</span><span class="p">[</span><span class="s2">&quot;moonshotai/kimi-k2:free&quot;</span><span class="p">])</span>
+</code></pre></div>
+<h2 id="message-format">Message Format</h2>
+<p>Pass conversation history as list of messages:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">messages</span> <span class="o">=</span> <span class="p">[</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;You are a helpful assistant.&quot;</span><span class="p">},</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;What&#39;s the capital of France?&quot;</span><span class="p">},</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;The capital of France is Amsterdam.&quot;</span><span class="p">},</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;No, why would you say Amsterdam?&quot;</span><span class="p">}</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="p">]</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="n">c</span> <span class="o">=</span> <span class="n">Call</span><span class="p">(</span><span class="s2">&quot;moonshotai/kimi-k2:free&quot;</span><span class="p">)</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="n">response</span> <span class="o">=</span> <span class="n">c</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Note:</strong> When using message format, the <code>system</code> parameter is ignored. Include system messages in your message list.</p>
 
 
 
