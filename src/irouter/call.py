@@ -27,6 +27,7 @@ class Call:
         self.client = OpenAI(
             api_key=api_key or os.getenv("OPENROUTER_API_KEY"), base_url=base_url
         )
+
     # TODO: Add Streaming support.
     # TODO: Add support for tool usage.
     # TODO: Exception handling.
@@ -43,7 +44,14 @@ class Call:
         :param raw: If True, returns the raw ChatCompletion object.
         :returns: Single response or list based on model count.
         """
-        inp = [{"role": "system", "content": self.system}, {"role": "user", "content": message}] if isinstance(message, str) else message
+        inp = (
+            [
+                {"role": "system", "content": self.system},
+                {"role": "user", "content": message},
+            ]
+            if isinstance(message, str)
+            else message
+        )
         resps = {
             model: self._get_resp(model, inp, extra_headers, raw)
             for model in self.models

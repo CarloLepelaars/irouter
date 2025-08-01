@@ -2,8 +2,6 @@ from fastcore.basics import listify
 from .call import Call
 
 
-# TODO: Clean up and test usage.
-# TODO: Handle case where single model is used. History and message output should be simplified.
 class Chat:
     """Chat with history and usage tracking."""
 
@@ -29,7 +27,9 @@ class Chat:
             for m in self.model
         }
 
-    def __call__(self, message: str | list[str], extra_headers: dict = {}) -> str | list[str]:
+    def __call__(
+        self, message: str | list[str], extra_headers: dict = {}
+    ) -> str | list[str]:
         """Send message and update history.
 
         :param message: User message or list of strings.
@@ -56,15 +56,15 @@ class Chat:
         outputs = [resp.choices[0].message.content for resp in resps]
 
         return outputs[0] if len(self.model) == 1 else outputs
-    
+
     @property
     def history(self) -> list[dict] | dict[str, list[dict]]:
-        """Get history for a model. 
+        """Get history for a model.
         If single model is used, return the history for that model (list of dicts).
         If multiple models are used, return a dict mapping model to history.
         """
         return self._history if len(self.model) > 1 else self._history[self.model[0]]
-    
+
     @property
     def usage(self) -> dict[str, dict[str, int]] | dict[str, int]:
         """Get usage for a model.
