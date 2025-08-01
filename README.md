@@ -24,12 +24,14 @@ pip install irouter
 export OPENROUTER_API_KEY=your_api_key
 ```
 
+In this way you can use `irouter` objects like `Call` and `Chat` without have to pass an API key.
+
 ```python
 from irouter import Call
 c = Call(model="moonshotai/kimi-k2:free")
 ```
 
-3b. Pass `api_key` to `irouter` objects like `Call` and `Chat`.
+3b. Alternatively, pass `api_key` to `irouter` objects like `Call` and `Chat`.
 
 ```python
 from irouter import Call
@@ -40,7 +42,7 @@ c = Call(model="moonshotai/kimi-k2:free", api_key="your_api_key")
 
 ### Call
 
-`Call` is the simplest interface to call one or more LLMs. To track message history and token usage, use `Chat`. 
+`Call` is the simplest interface to call one or more LLMs.
 
 #### Single LLM
 ```python
@@ -61,28 +63,30 @@ c("Who are you?")
 
 For more information on `Call`, check out the `call.ipynb` notebook in the `nbs` folder.
 
+If you would like to track message history and token usage, use `Chat`.
+
 ### Chat
 
 `Chat` is an easy way to interface with one or more LLMs, while tracking message history and token usage.
 
-### Single LLM
+#### Single LLM
 
 ```python
 from irouter import Chat
 c = Chat(model="moonshotai/kimi-k2:free")
 c("Who are you?")
-print(c.history)
-print(c.usage)
+print(c.history) # {'moonshotai/kimi-k2:free': [...]}
+print(c.usage) # {'moonshotai/kimi-k2:free': {'prompt_tokens': 8, 'completion_tokens': 8, 'total_tokens': 16}}
 ```
 
-### Multiple LLMs
+#### Multiple LLMs
 
 ```python
 from irouter import Chat
 c = Chat(model=["moonshotai/kimi-k2:free", "google/gemini-2.0-flash-exp:free"])
 c("Who are you?")
-print(c.history)
-print(c.usage)
+print(c.history) # {'moonshotai/kimi-k2:free': [...], 'google/gemini-2.0-flash-exp:free': [...]}
+print(c.usage) # {'moonshotai/kimi-k2:free': {'prompt_tokens': 8, 'completion_tokens': 8, 'total_tokens': 16}, 'google/gemini-2.0-flash-exp:free': {'prompt_tokens': 8, 'completion_tokens': 10, 'total_tokens': 18}}
 ```
 
 For more information on `Chat`, check out the `chat.ipynb` notebook in the `nbs` folder.
@@ -96,6 +100,7 @@ You can easily get all 300+ models available with `irouter` using `get_all_model
 ```python
 from irouter.base import get_all_models
 get_all_models()
+# ['llm_provider1/model1', ... 'llm_providerx/modelx']
 ```
 
 ## Credits
