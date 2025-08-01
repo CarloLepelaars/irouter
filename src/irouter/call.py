@@ -1,7 +1,7 @@
 import os
 from openai import OpenAI
 from openai.types.chat import ChatCompletion
-from fastcore.basics import listify, store_attr
+from fastcore.basics import listify
 
 from .base import BASE_URL, BASE_HEADERS
 
@@ -28,7 +28,6 @@ class Call:
         self.client = OpenAI(
             api_key=api_key or os.getenv("OPENROUTER_API_KEY"), base_url=base_url
         )
-
 
     # TODO: Add Streaming support.
     # TODO: Add support for tool usage.
@@ -76,6 +75,9 @@ class Call:
         :param raw: Return raw response if True, else content string
         :returns: Response content string or raw ChatCompletion object
         """
+        # By default the base header is defined as irouter so tokens are counted for the openrouter.ai library.
+        # Headers can be overwritten by defining extra_headers.
+        # Check https://openrouter.ai/docs/quickstart for examples of extra headers that can be set.
         headers = {**BASE_HEADERS, **extra_headers}
         resp = self.client.chat.completions.create(
             model=model,

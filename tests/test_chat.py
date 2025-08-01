@@ -71,9 +71,12 @@ def test_multiple_model_response():
 
         multi_chat = Chat(["model1", "model2"])
         multi_result = multi_chat("Hello")
-        assert isinstance(multi_result, list)
+        assert isinstance(multi_result, dict)
         assert len(multi_result) == 2
-        assert multi_result == ["Model1 response", "Model2 response"]
+        assert multi_result == {
+            "model1": "Model1 response",
+            "model2": "Model2 response",
+        }
 
         assert multi_chat.history == {
             "model1": [

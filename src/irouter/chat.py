@@ -1,4 +1,4 @@
-from fastcore.basics import listify, store_attr
+from fastcore.basics import listify
 from .call import Call
 from .base import BASE_URL
 
@@ -19,15 +19,18 @@ class Chat:
         :param base_url: API base URL
         :param api_key: API key, defaults to OPENROUTER_API_KEY env var
         """
-        store_attr()
-        self.model = listify(model)
+        self.models = listify(model)
         self.base_url = base_url
         self.system = system
-        self.call = Call(model, base_url, api_key, system)
-        self._history = {m: [{"role": "system", "content": system}] for m in self.model}
+        self.call = Call(
+            model=self.models, base_url=base_url, api_key=api_key, system=system
+        )
+        self._history = {
+            m: [{"role": "system", "content": system}] for m in self.models
+        }
         self._usage = {
             m: {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0}
-            for m in self.model
+            for m in self.models
         }
 
     def __call__(
@@ -40,14 +43,14 @@ class Chat:
         :param extra_headers: Additional headers
         :returns: Single response or list based on model count
         """
-        for model in self.model:
+        for model in self.models:
             self._history[model].append({"role": "user", "content": message})
         resps = [
             self.call._get_resp(model, self._history[model], extra_headers, raw=True)
-            for model in self.model
+            for model in self.models
         ]
 
-        for model, resp in zip(self.model, resps):
+        for model, resp in zip(self.models, resps):
             msg = resp.choices[0].message
             self._history[model].append({"role": "assistant", "content": msg.content})
             if hasattr(resp, "usage") and resp.usage:
@@ -56,9 +59,11 @@ class Chat:
                 self._usage[model]["completion_tokens"] += usage.completion_tokens
                 self._usage[model]["total_tokens"] += usage.total_tokens
 
-        outputs = [resp.choices[0].message.content for resp in resps]
-
-        return outputs[0] if len(self.model) == 1 else outputs
+        outputs = {
+            model: resp.choices[0].message.content
+            for model, resp in zip(self.models, resps)
+        }
+        return outputs[self.models[0]] if len(self.models) == 1 else outputs
 
     @property
     def history(self) -> list[dict] | dict[str, list[dict]]:
@@ -66,7 +71,7 @@ class Chat:
         If single model is used, return the history for that model (list of dicts).
         If multiple models are used, return a dict mapping model to history.
         """
-        return self._history if len(self.model) > 1 else self._history[self.model[0]]
+        return self._history if len(self.models) > 1 else self._history[self.models[0]]
 
     @property
     def usage(self) -> dict[str, dict[str, int]] | dict[str, int]:
@@ -74,7 +79,7 @@ class Chat:
         If single model is used, return the usage for that model (dict).
         If multiple models are used, return a dict mapping model to usage.
         """
-        return self._usage if len(self.model) > 1 else self._usage[self.model[0]]
+        return self._usage if len(self.models) > 1 else self._usage[self.models[0]]
 
     # TODO: Add streaming
     # TODO: Add tool usage support
