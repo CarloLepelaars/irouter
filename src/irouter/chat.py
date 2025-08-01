@@ -5,6 +5,7 @@ from .base import BASE_URL
 
 class Chat:
     """Chat with history and usage tracking."""
+
     def __init__(
         self,
         model: str | list[str],
@@ -27,7 +28,10 @@ class Chat:
         self._history = {
             m: [{"role": "system", "content": system}] for m in self.models
         }
-        self._usage = {m: {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0} for m in self.models}
+        self._usage = {
+            m: {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0}
+            for m in self.models
+        }
 
     def __call__(
         self, message: str | list[str], extra_headers: dict = {}
@@ -76,26 +80,37 @@ class Chat:
         If multiple models are used, return a dict mapping model to usage.
         """
         return self._usage if len(self.models) > 1 else self._usage[self.models[0]]
-    
+
     def set_history(self, history: list[dict]) -> None:
         """Set custom history for a model.
         :param history: List of dicts (messages) which define history for a model
         """
-        assert isinstance(history, list), f"History must be a list of dicts. Got {type(history)}"
+        assert isinstance(history, list), (
+            f"History must be a list of dicts. Got {type(history)}"
+        )
         for h in history:
-            assert isinstance(h, dict), f"History must be a list of dicts. Got {type(h)}"
+            assert isinstance(h, dict), (
+                f"History must be a list of dicts. Got {type(h)}"
+            )
             assert "role" in h, f"History must contain a role. Got {h}"
             assert "content" in h, f"History must contain a content. Got {h}"
-            assert h["role"] in ["system", "user", "assistant"], f"Role must be one of system, user, or assistant. Got {h['role']}"
+            assert h["role"] in ["system", "user", "assistant"], (
+                f"Role must be one of system, user, or assistant. Got {h['role']}"
+            )
         self._history = history
 
     def reset_history(self) -> None:
         """Reset history for a model."""
-        self._history = {m: [{"role": "system", "content": self.system}] for m in self.models}
+        self._history = {
+            m: [{"role": "system", "content": self.system}] for m in self.models
+        }
 
     def reset_usage(self) -> None:
         """Reset usage for a model."""
-        self._usage = {m: {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0} for m in self.models}
+        self._usage = {
+            m: {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0}
+            for m in self.models
+        }
 
     def reset(self) -> None:
         """Reset history and usage for all models."""

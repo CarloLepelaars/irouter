@@ -30,7 +30,7 @@ uv pip install -e .
 - Keep docstrings concise but complete (reStructured format)
 - Add new dependencies via `uv add <package>`
 
-### Before Submitting
+### Before Committing Code
 Run quality checks:
 ```bash
 uv run ruff format
@@ -48,12 +48,15 @@ uv run pytest -s
 
 Before implementing new features:
 1. Open a GitHub Issue to discuss the proposal
+
 2. Get community feedback
+
 3. Consider maintenance burden and API consistency
 
 ## Bug Reports
 
 Include:
+
 - Error messages and stack traces
 - Code that reproduces the issue
 - Environment details (Python version, OS)

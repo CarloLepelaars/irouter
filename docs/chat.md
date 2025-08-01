@@ -19,12 +19,10 @@ print(c.usage)    # View token usage
 
 ## Single Model Usage
 
-Initialize with system prompt:
-
 ```python
-c = Chat("moonshotai/kimi-k2:free", system="You are helpful.")
+c = Chat("moonshotai/kimi-k2:free", system="You are the best assistant in the world.")
 # or with explicit API key
-c = Chat("moonshotai/kimi-k2:free", api_key="your_api_key")
+# c = Chat("moonshotai/kimi-k2:free", api_key="your_api_key")
 
 # Initial state
 print(c.history)  # [{'role': 'system', 'content': 'You are helpful.'}]
@@ -63,14 +61,13 @@ print(c.usage["moonshotai/kimi-k2:free"])
 Reset conversation history:
 
 ```python
-c.reset_history()  # Reverts to system prompt only
-print(c.history)   # Back to initial state
+c.reset_history()  # Revert to system prompt
 ```
 
 Reset token usage:
 
 ```python
-c.reset_usage()    # Resets counters to zero
+c.reset_usage()    # Reset counters to zero
 print(c.usage)     # {'prompt_tokens': 0, 'completion_tokens': 0, 'total_tokens': 0}
 ```
 
