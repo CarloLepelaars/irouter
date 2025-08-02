@@ -865,8 +865,12 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">irouter</span><span class="w"> </span><span class="kn">import</span> <span class="n">Chat</span>
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="n">c</span> <span class="o">=</span> <span class="n">Chat</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;moonshotai/kimi-k2:free&quot;</span><span class="p">,</span> <span class="s2">&quot;google/gemini-2.0-flash-exp:free&quot;</span><span class="p">])</span>
 <a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="n">c</span><span class="p">(</span><span class="s2">&quot;Who are you?&quot;</span><span class="p">)</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="nb">print</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">history</span><span class="p">)</span> <span class="c1"># {&#39;moonshotai/kimi-k2:free&#39;: [...], &#39;google/gemini-2.0-flash-exp:free&#39;: [...]}</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="nb">print</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">usage</span><span class="p">)</span> <span class="c1"># {&#39;moonshotai/kimi-k2:free&#39;: {&#39;prompt_tokens&#39;: 8, &#39;completion_tokens&#39;: 8, &#39;total_tokens&#39;: 16}, &#39;google/gemini-2.0-flash-exp:free&#39;: {&#39;prompt_tokens&#39;: 8, &#39;completion_tokens&#39;: 10, &#39;total_tokens&#39;: 18}}</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="nb">print</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">history</span><span class="p">)</span> 
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># {&#39;moonshotai/kimi-k2:free&#39;: [...], </span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1"># &#39;google/gemini-2.0-flash-exp:free&#39;: [...]}</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="nb">print</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">usage</span><span class="p">)</span> 
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># {&#39;moonshotai/kimi-k2:free&#39;: {&#39;prompt_tokens&#39;: 8, &#39;completion_tokens&#39;: 8, &#39;total_tokens&#39;: 16}, </span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># &#39;google/gemini-2.0-flash-exp:free&#39;: {&#39;prompt_tokens&#39;: 8, &#39;completion_tokens&#39;: 10, &#39;total_tokens&#39;: 18}}</span>
 </code></pre></div>
 <h3 id="image-support">Image Support</h3>
 <p>Both <code>Call</code> and <code>Chat</code> support images from image URLs or local images.</p>
@@ -875,25 +879,24 @@
 - image URL(s) and/or
 - image path(s)</p>
 <p>Make sure to select an LLM that supports image input, like <code>gpt-4o-mini</code>.</p>
-<p><img alt="Example image" src="https://www.petlandflorida.com/wp-content/uploads/2022/04/shutterstock_1290320698-1-scaled.jpg" /></p>
+<p><img src="https://www.petlandflorida.com/wp-content/uploads/2022/04/shutterstock_1290320698-1-scaled.jpg" alt="Example image" width="300"></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">irouter</span><span class="w"> </span><span class="kn">import</span> <span class="n">Chat</span>
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="n">ic</span> <span class="o">=</span> <span class="n">Chat</span><span class="p">(</span><span class="s2">&quot;gpt-4o-mini&quot;</span><span class="p">)</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># or </span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># ic = Call(&quot;gpt-4o-mini&quot;)</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Image URL</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="n">ic</span><span class="p">([</span><span class="s2">&quot;https://www.petlandflorida.com/wp-content/uploads/2022/04/shutterstock_1290320698-1-scaled.jpg&quot;</span><span class="p">,</span> <span class="s2">&quot;What is in the image?&quot;</span><span class="p">])</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># or local image</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># ic([&quot;../assets/puppy.jpg&quot;, &quot;What is in the image?&quot;])</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c1"># Example output:</span>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># The image shows a cute puppy, ..., The background is blurred, </span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="c1"># with green hues suggesting an outdoors setting.</span>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="c1"># Images are tracked in history</span>
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="nb">print</span><span class="p">(</span><span class="n">ic</span><span class="o">.</span><span class="n">history</span><span class="p">)</span>
-<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="c1"># [{&#39;role&#39;: &#39;system&#39;, &#39;content&#39;: &#39;You are a helpful assistant.&#39;}, </span>
-<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="c1">#  {&#39;role&#39;: &#39;user&#39;, &#39;content&#39;: [{&#39;type&#39;: &#39;image_url&#39;, &#39;image_url&#39;:</span>
-<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="c1">#  {&#39;url&#39;: &#39;...&#39;}}, {&#39;type&#39;: &#39;text&#39;, &#39;text&#39;: &#39;What is in the image?&#39;}]}, </span>
-<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="c1">#  {&#39;role&#39;: &#39;assistant&#39;, &#39;content&#39;: &#39;The image shows a cute puppy...&#39;}]</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># Image URL</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="n">ic</span><span class="p">([</span><span class="s2">&quot;https://www.petlandflorida.com/wp-content/uploads/2022/04/shutterstock_1290320698-1-scaled.jpg&quot;</span><span class="p">,</span> 
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>    <span class="s2">&quot;What is in the image?&quot;</span><span class="p">])</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1"># or local image</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># ic([&quot;../assets/puppy.jpg&quot;, &quot;What is in the image?&quot;])</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># Example output:</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c1"># The image shows a cute puppy, ..., The background is blurred, </span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># with green hues suggesting an outdoors setting.</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="c1"># Images are tracked in history</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="nb">print</span><span class="p">(</span><span class="n">ic</span><span class="o">.</span><span class="n">history</span><span class="p">)</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="c1"># [{&#39;role&#39;: &#39;system&#39;, &#39;content&#39;: &#39;You are a helpful assistant.&#39;}, </span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="c1">#  {&#39;role&#39;: &#39;user&#39;, &#39;content&#39;: [{&#39;type&#39;: &#39;image_url&#39;, &#39;image_url&#39;:</span>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="c1">#  {&#39;url&#39;: &#39;...&#39;}}, {&#39;type&#39;: &#39;text&#39;, &#39;text&#39;: &#39;What is in the image?&#39;}]}, </span>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="c1">#  {&#39;role&#39;: &#39;assistant&#39;, &#39;content&#39;: &#39;The image shows a cute puppy...&#39;}]</span>
 </code></pre></div>
 <p>For more information on <code>Chat</code>, check out the <code>chat.ipynb</code> notebook in the <code>nbs</code> folder.</p>
 <h3 id="misc">Misc</h3>

@@ -671,13 +671,16 @@
 <h2 id="image-support">Image Support</h2>
 <p>Image URLs and local images are supported. Supports <code>.jpg</code>, <code>.jpeg</code>, <code>.png</code> and <code>.webp</code> formats.</p>
 <p>Pass images with text for vision-capable models:</p>
+<p><img src="https://www.petlandflorida.com/wp-content/uploads/2022/04/shutterstock_1290320698-1-scaled.jpg" alt="Example image" width="300"></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">c</span> <span class="o">=</span> <span class="n">Call</span><span class="p">(</span><span class="s2">&quot;gpt-4o-mini&quot;</span><span class="p">)</span>
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
 <a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Image URL + text</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="n">response</span> <span class="o">=</span> <span class="n">c</span><span class="p">([</span><span class="s2">&quot;https://example.com/image.jpg&quot;</span><span class="p">,</span> <span class="s2">&quot;What&#39;s in this image?&quot;</span><span class="p">])</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># Local image + text  </span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="n">response</span> <span class="o">=</span> <span class="n">c</span><span class="p">([</span><span class="s2">&quot;./photo.png&quot;</span><span class="p">,</span> <span class="s2">&quot;Describe this photo&quot;</span><span class="p">])</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="n">response</span> <span class="o">=</span> <span class="n">c</span><span class="p">([</span><span class="s2">&quot;https://www.petlandflorida.com/wp-content/uploads/2022/04/shutterstock_1290320698-1-scaled.jpg&quot;</span><span class="p">,</span> 
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>              <span class="s2">&quot;What&#39;s in this image?&quot;</span><span class="p">])</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># Example output: &quot;The image shows a cute puppy...&quot;</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Local image + text  </span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="n">response</span> <span class="o">=</span> <span class="n">c</span><span class="p">([</span><span class="s2">&quot;../assets/puppy.jpg&quot;</span><span class="p">,</span> <span class="s2">&quot;Describe this photo&quot;</span><span class="p">])</span>
 </code></pre></div>
 
 
