@@ -1,4 +1,5 @@
 import base64
+from typing import Any
 from pathlib import Path
 from urllib.parse import urlparse
 from IPython.display import Markdown, display
@@ -33,31 +34,36 @@ def encode_base64(image_path: str) -> str:
         return base64.b64encode(image_file.read()).decode("utf-8")
 
 
-# TODO: Support PDF input
-# See https://openrouter.ai/docs/features/images-and-pdfs#pdf-support
-def detect_content_type(item: str) -> str:
+def detect_content_type(item: Any) -> str:
     """Detect content type of item.
     Options are:
-    1. Raw text "text"
-    2. Image URL "image_url" if item is a URL and ends with a supported image extension.
-    3. Local image "local_image" if item is a local file path and ends with a supported image extension.
+    1. "text" if the item is a non-string or doesn't belong to any of the other categories.
+    Images:
+    2. "image_url" if item is a URL and ends with a supported image extension.
+    3. "local_image" if item is a local file path and ends with a supported image extension.
+    PDFs:
+    4. "pdf_url" if item is a URL and ends with a PDF extension.
+    5. "local_pdf" if item is a local file path and ends with a PDF extension.
 
     :param item: Item to detect content type of.
     :returns: Content type of item.
     """
-    SUPPORTED_IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp"}
     if isinstance(item, str):
+        SUPPORTED_IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp"}
         parsed = urlparse(item)
-        if (
-            parsed.scheme in ("http", "https")
-            and Path(parsed.path).suffix.lower() in SUPPORTED_IMAGE_EXTENSIONS
-        ):
-            return "image_url"
-        if (
-            Path(item).exists()
-            and Path(item).suffix.lower() in SUPPORTED_IMAGE_EXTENSIONS
-        ):
-            return "local_image"
+        suffix = Path(parsed.path).suffix.lower()
+        # URLs
+        if parsed.scheme in ("http", "https"):
+            if suffix in SUPPORTED_IMAGE_EXTENSIONS:
+                return "image_url"
+            elif suffix == ".pdf":
+                return "pdf_url"
+        # Local files
+        else:
+            if suffix == ".pdf":
+                return "local_pdf"
+            elif Path(item).exists() and suffix in SUPPORTED_IMAGE_EXTENSIONS:
+                return "local_image"
     return "text"
 
 

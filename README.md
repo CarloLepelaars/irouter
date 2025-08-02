@@ -7,7 +7,7 @@
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
 
-Access 100s of LLMs with 2 lines of code.
+`irouter` ("Intelligence Router") is a Python package with a simple interface to access 100s of LLMs with 2 lines of code.
 
 ## Installation
 

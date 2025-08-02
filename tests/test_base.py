@@ -53,7 +53,7 @@ def test_detect_content_type():
 
     # Test non-image URLs
     assert detect_content_type("https://example.com/page.html") == "text"
-    assert detect_content_type("https://example.com/doc.pdf") == "text"
+    assert detect_content_type("https://example.com/doc.pdf") == "pdf_url"
 
     # Test local images (mock file existence)
     with patch("irouter.base.Path.exists", return_value=True):
@@ -65,6 +65,7 @@ def test_detect_content_type():
     with patch("irouter.base.Path.exists", return_value=False):
         assert detect_content_type("nonexistent.jpg") == "text"
         assert detect_content_type("missing.png") == "text"
+        assert detect_content_type("missing.pdf") == "local_pdf"
 
     # Test text content
     assert detect_content_type("Hello world") == "text"
