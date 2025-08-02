@@ -82,8 +82,12 @@ print(c.usage) # {'moonshotai/kimi-k2:free': {'prompt_tokens': 8, 'completion_to
 from irouter import Chat
 c = Chat(model=["moonshotai/kimi-k2:free", "google/gemini-2.0-flash-exp:free"])
 c("Who are you?")
-print(c.history) # {'moonshotai/kimi-k2:free': [...], 'google/gemini-2.0-flash-exp:free': [...]}
-print(c.usage) # {'moonshotai/kimi-k2:free': {'prompt_tokens': 8, 'completion_tokens': 8, 'total_tokens': 16}, 'google/gemini-2.0-flash-exp:free': {'prompt_tokens': 8, 'completion_tokens': 10, 'total_tokens': 18}}
+print(c.history) 
+# {'moonshotai/kimi-k2:free': [...], 
+# 'google/gemini-2.0-flash-exp:free': [...]}
+print(c.usage) 
+# {'moonshotai/kimi-k2:free': {'prompt_tokens': 8, 'completion_tokens': 8, 'total_tokens': 16}, 
+# 'google/gemini-2.0-flash-exp:free': {'prompt_tokens': 8, 'completion_tokens': 10, 'total_tokens': 18}}
 ```
 
 ### Image Support
@@ -97,15 +101,14 @@ Adding images is as simple as providing a list of strings with:
 
 Make sure to select an LLM that supports image input, like `gpt-4o-mini`.
 
-![Example image](https://www.petlandflorida.com/wp-content/uploads/2022/04/shutterstock_1290320698-1-scaled.jpg)
+<img src="https://www.petlandflorida.com/wp-content/uploads/2022/04/shutterstock_1290320698-1-scaled.jpg" alt="Example image" width="300">
 
 ```python
 from irouter import Chat
 ic = Chat("gpt-4o-mini")
-# or 
-# ic = Call("gpt-4o-mini")
 # Image URL
-ic(["https://www.petlandflorida.com/wp-content/uploads/2022/04/shutterstock_1290320698-1-scaled.jpg", "What is in the image?"])
+ic(["https://www.petlandflorida.com/wp-content/uploads/2022/04/shutterstock_1290320698-1-scaled.jpg", 
+    "What is in the image?"])
 # or local image
 # ic(["../assets/puppy.jpg", "What is in the image?"])
 # Example output:

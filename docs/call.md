@@ -74,12 +74,16 @@ Image URLs and local images are supported. Supports `.jpg`, `.jpeg`, `.png` and 
 
 Pass images with text for vision-capable models:
 
+<img src="https://www.petlandflorida.com/wp-content/uploads/2022/04/shutterstock_1290320698-1-scaled.jpg" alt="Example image" width="300">
+
 ```python
 c = Call("gpt-4o-mini")
 
 # Image URL + text
-response = c(["https://example.com/image.jpg", "What's in this image?"])
+response = c(["https://www.petlandflorida.com/wp-content/uploads/2022/04/shutterstock_1290320698-1-scaled.jpg", 
+              "What's in this image?"])
+# Example output: "The image shows a cute puppy..."
 
 # Local image + text  
-response = c(["./photo.png", "Describe this photo"])
+response = c(["../assets/puppy.jpg", "Describe this photo"])
 ```

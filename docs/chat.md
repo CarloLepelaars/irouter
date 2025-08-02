@@ -82,13 +82,17 @@ print(c.usage)     # {'prompt_tokens': 0, 'completion_tokens': 0, 'total_tokens'
 
 Image URLs and local images are supported. Supports `.jpg`, `.jpeg`, `.png` and `.webp` formats.
 
+<img src="https://www.petlandflorida.com/wp-content/uploads/2022/04/shutterstock_1290320698-1-scaled.jpg" alt="Example image" width="300">
+
 ```python
 c = Chat("gpt-4o-mini")
 
 # Image URL + text (tracked in history)
-response = c(["https://example.com/image.jpg", "What's in this image?"])
+response = c(["https://www.petlandflorida.com/wp-content/uploads/2022/04/shutterstock_1290320698-1-scaled.jpg", 
+              "What's in this image?"])
 print(c.history)  # Images preserved in conversation history
+# Example output: "The image shows a cute puppy..."
 
 # Local image + text
-response = c(["./photo.png", "Tell me more about this"])
+response = c(["../assets/puppy.jpg", "Tell me more about this"])
 ```
