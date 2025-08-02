@@ -2,6 +2,13 @@
 
 Conversational LLM interactions with history and token usage tracking.
 
+## Comparison with `Call`
+
+- **Call**: One-off requests, no state tracking
+- **Chat**: Multi-turn conversations, maintains history and usage statistics
+
+Use `Chat` when you need persistent conversations or want to track token consumption across multiple interactions.
+
 ## Quick Start
 
 ```python
@@ -71,9 +78,17 @@ c.reset_usage()    # Reset counters to zero
 print(c.usage)     # {'prompt_tokens': 0, 'completion_tokens': 0, 'total_tokens': 0}
 ```
 
-## Comparison with Call
+## Image Support
 
-- **Call**: One-off requests, no state tracking
-- **Chat**: Multi-turn conversations, maintains history and usage statistics
+Image URLs and local images are supported. Supports `.jpg`, `.jpeg`, `.png` and `.webp` formats.
 
-Use `Chat` when you need persistent conversations or want to track token consumption across multiple interactions.
+```python
+c = Chat("gpt-4o-mini")
+
+# Image URL + text (tracked in history)
+response = c(["https://example.com/image.jpg", "What's in this image?"])
+print(c.history)  # Images preserved in conversation history
+
+# Local image + text
+response = c(["./photo.png", "Tell me more about this"])
+```

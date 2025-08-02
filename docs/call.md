@@ -67,3 +67,19 @@ response = c(messages)
 ```
 
 **Note:** When using message format, the `system` parameter is ignored. Include system messages in your message list.
+
+## Image Support
+
+Image URLs and local images are supported. Supports `.jpg`, `.jpeg`, `.png` and `.webp` formats.
+
+Pass images with text for vision-capable models:
+
+```python
+c = Call("gpt-4o-mini")
+
+# Image URL + text
+response = c(["https://example.com/image.jpg", "What's in this image?"])
+
+# Local image + text  
+response = c(["./photo.png", "Describe this photo"])
+```

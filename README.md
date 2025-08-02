@@ -62,10 +62,6 @@ c("Who are you?")
 #  'google/gemini-2.0-flash-exp:free': 'I am a large language model, trained by Google.\n'}
 ```
 
-For more information on `Call`, check out the `call.ipynb` notebook in the `nbs` folder.
-
-If you would like to track message history and token usage, use `Chat`.
-
 ### Chat
 
 `Chat` is an easy way to interface with one or more LLMs, while tracking message history and token usage.
@@ -90,6 +86,40 @@ print(c.history) # {'moonshotai/kimi-k2:free': [...], 'google/gemini-2.0-flash-e
 print(c.usage) # {'moonshotai/kimi-k2:free': {'prompt_tokens': 8, 'completion_tokens': 8, 'total_tokens': 16}, 'google/gemini-2.0-flash-exp:free': {'prompt_tokens': 8, 'completion_tokens': 10, 'total_tokens': 18}}
 ```
 
+### Image Support
+
+Both `Call` and `Chat` support images from image URLs or local images.
+
+Adding images is as simple as providing a list of strings with:
+- text and/or
+- image URL(s) and/or
+- image path(s)
+
+Make sure to select an LLM that supports image input, like `gpt-4o-mini`.
+
+![Example image](https://www.petlandflorida.com/wp-content/uploads/2022/04/shutterstock_1290320698-1-scaled.jpg)
+
+```python
+from irouter import Chat
+ic = Chat("gpt-4o-mini")
+# or 
+# ic = Call("gpt-4o-mini")
+# Image URL
+ic(["https://www.petlandflorida.com/wp-content/uploads/2022/04/shutterstock_1290320698-1-scaled.jpg", "What is in the image?"])
+# or local image
+# ic(["../assets/puppy.jpg", "What is in the image?"])
+# Example output:
+# The image shows a cute puppy, ..., The background is blurred, 
+# with green hues suggesting an outdoors setting.
+
+# Images are tracked in history
+print(ic.history)
+# [{'role': 'system', 'content': 'You are a helpful assistant.'}, 
+#  {'role': 'user', 'content': [{'type': 'image_url', 'image_url':
+#  {'url': '...'}}, {'type': 'text', 'text': 'What is in the image?'}]}, 
+#  {'role': 'assistant', 'content': 'The image shows a cute puppy...'}]
+```
+
 For more information on `Chat`, check out the `chat.ipynb` notebook in the `nbs` folder.
 
 ### Misc
@@ -102,6 +132,15 @@ You can easily get all 300+ models available with `irouter` using `get_all_model
 from irouter.base import get_all_models
 get_all_models()
 # ['llm_provider1/model1', ... 'llm_providerx/modelx']
+```
+
+#### `history_to_markdown`
+
+Convert chat history to markdown for easy display in Jupyter notebooks.
+
+```python
+from irouter.base import history_to_markdown
+history_to_markdown(c.history, ipython=True)
 ```
 
 ## Credits

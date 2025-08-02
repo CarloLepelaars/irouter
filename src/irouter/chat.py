@@ -43,8 +43,10 @@ class Chat:
         :param extra_headers: Additional headers
         :returns: Single response or list based on model count
         """
+        user_message = self.call.construct_user_message(message)
         for model in self.models:
-            self._history[model].append({"role": "user", "content": message})
+            self._history[model].append(user_message)
+
         resps = [
             self.call._get_resp(model, self._history[model], extra_headers, raw=True)
             for model in self.models
@@ -70,6 +72,8 @@ class Chat:
         """Get history for a model.
         If single model is used, return the history for that model (list of dicts).
         If multiple models are used, return a dict mapping model to history.
+
+        :returns: History for a model or dict mapping model to history.
         """
         return self._history if len(self.models) > 1 else self._history[self.models[0]]
 
@@ -78,12 +82,16 @@ class Chat:
         """Get usage for a model.
         If single model is used, return the usage for that model (dict).
         If multiple models are used, return a dict mapping model to usage.
+
+        :returns: Usage for a model or dict mapping model to usage.
         """
         return self._usage if len(self.models) > 1 else self._usage[self.models[0]]
 
     def set_history(self, history: list[dict]) -> None:
         """Set custom history for a model.
+
         :param history: List of dicts (messages) which define history for a model
+        :returns: None
         """
         assert isinstance(history, list), (
             f"History must be a list of dicts. Got {type(history)}"
@@ -100,20 +108,29 @@ class Chat:
         self._history = history
 
     def reset_history(self) -> None:
-        """Reset history for a model."""
+        """Reset history for a model.
+
+        :returns: None
+        """
         self._history = {
             m: [{"role": "system", "content": self.system}] for m in self.models
         }
 
     def reset_usage(self) -> None:
-        """Reset usage for a model."""
+        """Reset usage for a model.
+
+        :returns: None
+        """
         self._usage = {
             m: {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0}
             for m in self.models
         }
 
     def reset(self) -> None:
-        """Reset history and usage for all models."""
+        """Reset history and usage for all models.
+
+        :returns: None
+        """
         self.reset_history()
         self.reset_usage()
 

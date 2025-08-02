@@ -42,3 +42,32 @@ print(markdown)
 # Display directly in Jupyter
 history_to_markdown(chat.history, ipython=True)
 ```
+
+## detect_content_type
+
+Detect if content is text, image URL, or local image:
+
+```python
+from irouter.base import detect_content_type
+
+# Image URL detection
+detect_content_type("https://example.com/image.jpg")  # "image_url"
+
+# Local image detection  
+detect_content_type("./photo.png")  # "local_image" (if file exists)
+
+# Text detection
+detect_content_type("Hello world")  # "text"
+```
+
+## encode_base64
+
+Encode local images to base64 for API requests:
+
+```python
+from irouter.base import encode_base64
+
+# Convert image to base64
+base64_data = encode_base64("path/to/image.jpg")
+print(base64_data[:50])  # First 50 characters of base64 string
+```

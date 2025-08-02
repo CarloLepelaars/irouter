@@ -15,6 +15,9 @@ def test_single_model_response():
     with patch("irouter.chat.Call") as mock_call_class:
         mock_call = MagicMock()
         mock_call._get_resp = Mock(return_value=mock_response)
+        mock_call.construct_user_message = Mock(
+            return_value={"role": "user", "content": "Hello"}
+        )
         mock_call_class.return_value = mock_call
 
         chat = Chat("test-model", system="Test system")
@@ -67,6 +70,9 @@ def test_multiple_model_response():
             return mock_response1 if model == "model1" else mock_response2
 
         mock_call._get_resp = Mock(side_effect=mock_get_resp)
+        mock_call.construct_user_message = Mock(
+            return_value={"role": "user", "content": "Hello"}
+        )
         mock_call_class.return_value = mock_call
 
         multi_chat = Chat(["model1", "model2"])
@@ -97,3 +103,75 @@ def test_multiple_model_response():
 
         assert multi_chat.history["model1"][2]["content"] == "Model1 response"
         assert multi_chat.history["model2"][2]["content"] == "Model2 response"
+
+
+def test_chat_with_images():
+    mock_response = MagicMock()
+    mock_response.choices = [MagicMock()]
+    mock_response.choices[0].message.content = "Image chat response"
+    mock_response.usage = MagicMock()
+    mock_response.usage.prompt_tokens = 15
+    mock_response.usage.completion_tokens = 10
+    mock_response.usage.total_tokens = 25
+
+    with patch("irouter.chat.Call") as mock_call_class:
+        mock_call = MagicMock()
+        mock_call._get_resp = Mock(return_value=mock_response)
+
+        # Mock the construct_user_message method
+        def mock_construct_user_message(message):
+            if isinstance(message, list):
+                return {
+                    "role": "user",
+                    "content": [
+                        {
+                            "type": "image_url",
+                            "image_url": {"url": "https://example.com/image.jpg"},
+                        },
+                        {"type": "text", "text": "What is in the image?"},
+                    ],
+                }
+            return {"role": "user", "content": message}
+
+        mock_call.construct_user_message = Mock(side_effect=mock_construct_user_message)
+        mock_call_class.return_value = mock_call
+
+        chat = Chat("gpt-4o-mini")
+        result = chat(["https://example.com/image.jpg", "What is in the image?"])
+
+        assert result == "Image chat response"
+
+        # Test that image content is properly tracked in history
+        assert len(chat.history) == 3  # system + user + assistant
+
+        user_message = chat.history[1]
+        assert user_message["role"] == "user"
+        assert isinstance(user_message["content"], list)
+        assert user_message["content"][0]["type"] == "image_url"
+        assert user_message["content"][1]["type"] == "text"
+
+        # Test usage tracking still works with images
+        assert chat.usage["prompt_tokens"] == 15
+        assert chat.usage["completion_tokens"] == 10
+        assert chat.usage["total_tokens"] == 25
+
+
+def test_chat_construct_user_message_integration():
+    """Test that Chat properly delegates to Call's construct_user_message"""
+    with patch("irouter.chat.Call") as mock_call_class:
+        mock_call = MagicMock()
+        mock_call.construct_user_message = Mock(
+            return_value={"role": "user", "content": "mocked"}
+        )
+        mock_call._get_resp = Mock(
+            return_value=MagicMock(
+                choices=[MagicMock(message=MagicMock(content="test"))]
+            )
+        )
+        mock_call_class.return_value = mock_call
+
+        chat = Chat("test-model")
+        chat("test message")
+
+        # Verify construct_user_message was called with the input
+        mock_call.construct_user_message.assert_called_once_with("test message")
