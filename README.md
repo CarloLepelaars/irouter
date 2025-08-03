@@ -90,7 +90,7 @@ print(c.usage)
 # 'google/gemini-2.0-flash-exp:free': {'prompt_tokens': 8, 'completion_tokens': 10, 'total_tokens': 18}}
 ```
 
-### Image Support
+### Images
 
 Both `Call` and `Chat` support images from image URLs or local images.
 
@@ -134,10 +134,29 @@ from irouter import Call
 c = Call("moonshotai/kimi-k2:free")
 pdf_url = "https://proceedings.neurips.cc/paper_files/paper/2017/file/3f5ee243547dee91fbd053c1c4a845aa-Paper.pdf"
 c([pdf_url, "What is the main contribution of this paper?"])
+# 'The main contribution of this paper is the introduction of the Transformer architecture...'
+```
 
-# Configure custom PDF parsing with extra_body. `pdf-text` is a free PDF parsing engine.
-extra_body = {"plugins": [{"id": "file-parser", "pdf": {"engine": "pdf-text"}}]}
-c([pdf_url, "What is the main contribution of this paper?"], extra_body=extra_body)
+### Audio Support
+
+Some LLMs have native audio support. Simply pass a local filepath that points to a `.mp3` or `.wav` file with the instruction as a list of strings.
+
+```python
+from irouter import Call
+c = Call("google/gemini-2.5-flash")
+c(["../assets/bottles.mp3", "What do you hear?"])
+# 'I hear the sound of a glass bottle being opened and closed...'
+```
+
+### Multiple Modalities
+
+Combine text, images, PDFs, and audio in a single request by simply passing a list of strings.
+
+```python
+from irouter import Call
+c = Call("google/gemini-2.5-flash")
+c(["../assets/bottles.mp3", "../assets/puppy.jpg", "What do you hear and see?"])
+# 'I hear sounds of glass and see a small, fluffy dog...'
 ```
 
 ### Misc
