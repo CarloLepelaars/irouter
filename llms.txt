@@ -1,0 +1,41 @@
+# irouter
+
+> irouter is a Python (3.10+) library that provides easy access to 100+ LLMs through OpenRouter's API. It simplifies LLM interactions to just 2 lines of code while supporting both single and multiple model calls.
+
+Things to remember when using irouter:
+- You must set the `OPENROUTER_API_KEY` environment variable or pass `api_key` directly to objects such as `Call` and `Chat`.
+- irouter supports 300+ models via OpenRouter including OpenAI, Anthropic, Google, and more.
+- You can pass custom OpenAI client configurations for advanced usage.
+- Use `Call()` for simple one-off LLM interactions.
+- Use `Chat()` for conversational interfaces with message history and token tracking.
+- Supports both single model calls and multi-model parallel calls.
+- Built on top of the `openai.OpenAI` Python client.
+
+## Setup
+```bash
+pip install irouter
+export OPENROUTER_API_KEY=your_api_key
+```
+
+## Core Components
+- `get_all_models()`: View all 300+ available models.
+- `Call`: Simple interface for one-off LLM calls (single or multiple models)
+- `Chat`: Conversational interface with message history and usage tracking
+
+## Basic Usage
+```python
+from irouter import Call, Chat
+
+# Single model call
+c = Call(model="moonshotai/kimi-k2:free")
+c("Who are you?")
+
+# Multiple models
+c = Call(model=["moonshotai/kimi-k2:free", "google/gemini-2.0-flash-exp:free"])
+c("Who are you?")
+
+# Chat with history
+chat = Chat(model="moonshotai/kimi-k2:free")
+chat("Hello!")
+print(chat.history, chat.usage)
+```
