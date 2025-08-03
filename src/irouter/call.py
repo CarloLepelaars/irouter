@@ -38,7 +38,9 @@ class Call:
         self,
         message: str | list[str] | list[dict],
         extra_headers: dict = {},
+        extra_body: dict = {},
         raw: bool = False,
+        **kwargs,
     ) -> str | dict[str, str] | ChatCompletion | dict[str, ChatCompletion]:
         """Make API call.
 
@@ -46,7 +48,9 @@ class Call:
         If message string or list of strings is provided, a system prompt is added.
         If message dicts are provided, no additional system prompt is added.
         :param extra_headers: Additional headers for the Openrouter API.
+        :param extra_body: Openrouter-only API body parameters.
         :param raw: If True, returns the raw ChatCompletion object.
+        **kwargs are passed to the API chat completion call. Common parameters include `temperature` and `max_tokens`.
         :returns: Single response or list based on model count.
         """
         inp = []
@@ -61,7 +65,12 @@ class Call:
 
         resps = {
             model: self._get_resp(
-                model=model, messages=inp, extra_headers=extra_headers, raw=raw
+                model=model,
+                messages=inp,
+                extra_headers=extra_headers,
+                extra_body=extra_body,
+                raw=raw,
+                **kwargs,
             )
             for model in self.models
         }
@@ -109,7 +118,9 @@ class Call:
         model: str,
         messages: list[dict],
         extra_headers: dict,
+        extra_body: dict,
         raw: bool,
+        **kwargs,
     ) -> str | ChatCompletion:
         """Get API response with merged headers.
 
@@ -117,7 +128,9 @@ class Call:
         :param messages: Message list for completion
         :param extra_headers: Additional headers, overrides BASE_HEADERS if same keys are given.
         Overriding HTTP-Referer and X-Title in extra_headers can be useful if you want to implement your own site tracking on openrouter.ai.
+        :param extra_body: Openrouter-only API body parameters.
         :param raw: Return raw response if True, else content string
+        **kwargs are passed to the API chat completion call. Common parameters include `temperature` and `max_tokens`.
         :returns: Response content string or raw ChatCompletion object
         """
         # By default the base header is defined as irouter so tokens are counted for the openrouter.ai library.
@@ -128,5 +141,7 @@ class Call:
             model=model,
             messages=messages,
             extra_headers=headers,
+            extra_body=extra_body,
+            **kwargs,
         )
         return resp if raw else resp.choices[0].message.content

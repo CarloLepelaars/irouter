@@ -34,13 +34,19 @@ class Chat:
         }
 
     def __call__(
-        self, message: str | list[str], extra_headers: dict = {}
+        self,
+        message: str | list[str],
+        extra_headers: dict = {},
+        extra_body: dict = {},
+        **kwargs,
     ) -> str | list[str]:
         """Send message and update history.
 
         :param message: User message or list of strings.
         For example, if an image URL or bytes and text are passed, the image will be handled in the LLM call.
         :param extra_headers: Additional headers
+        :param extra_body: Openrouter-only API body parameters.
+        **kwargs are passed to the API chat completion call. Common parameters include `temperature` and `max_tokens`.
         :returns: Single response or list based on model count
         """
         user_message = self.call.construct_user_message(message)
@@ -48,7 +54,14 @@ class Chat:
             self._history[model].append(user_message)
 
         resps = [
-            self.call._get_resp(model, self._history[model], extra_headers, raw=True)
+            self.call._get_resp(
+                model,
+                self._history[model],
+                extra_headers,
+                extra_body,
+                raw=True,
+                **kwargs,
+            )
             for model in self.models
         ]
 
@@ -108,33 +121,22 @@ class Chat:
         self._history = history
 
     def reset_history(self) -> None:
-        """Reset history for a model.
-
-        :returns: None
-        """
+        """Reset history for all models."""
         self._history = {
             m: [{"role": "system", "content": self.system}] for m in self.models
         }
 
     def reset_usage(self) -> None:
-        """Reset usage for a model.
-
-        :returns: None
-        """
+        """Reset usage for all models."""
         self._usage = {
             m: {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0}
             for m in self.models
         }
 
     def reset(self) -> None:
-        """Reset history and usage for all models.
-
-        :returns: None
-        """
+        """Reset history and usage for all models."""
         self.reset_history()
         self.reset_usage()
 
     # TODO: Add streaming
     # TODO: Add tool usage support
-    # TODO: Add list message input support (For example url and text)
-    # TODO: Add image support (if input is bytes or url with img suffix)

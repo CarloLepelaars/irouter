@@ -135,3 +135,67 @@ def test_call_with_images():
         assert len(user_message["content"]) == 2
         assert user_message["content"][0]["type"] == "image_url"
         assert user_message["content"][1]["type"] == "text"
+
+
+def test_call_with_extra_body():
+    mock_response = MagicMock()
+    mock_response.choices = [MagicMock()]
+    mock_response.choices[0].message.content = "Test response"
+
+    with patch("irouter.call.OpenAI") as mock_openai:
+        mock_client = MagicMock()
+        mock_client.chat.completions.create.return_value = mock_response
+        mock_openai.return_value = mock_client
+
+        call = Call("test-model")
+        extra_body = {
+            "provider": {"require_parameters": True},
+            "transforms": ["middle-out"],
+        }
+        result = call("Hello", extra_body=extra_body)
+
+        assert result == "Test response"
+        call_args = mock_client.chat.completions.create.call_args
+        assert call_args[1]["extra_body"] == extra_body
+
+
+def test_call_with_kwargs():
+    mock_response = MagicMock()
+    mock_response.choices = [MagicMock()]
+    mock_response.choices[0].message.content = "Test response"
+
+    with patch("irouter.call.OpenAI") as mock_openai:
+        mock_client = MagicMock()
+        mock_client.chat.completions.create.return_value = mock_response
+        mock_openai.return_value = mock_client
+
+        call = Call("test-model")
+        result = call("Hello", temperature=0.7, max_tokens=100)
+
+        assert result == "Test response"
+        call_args = mock_client.chat.completions.create.call_args
+        assert call_args[1]["temperature"] == 0.7
+        assert call_args[1]["max_tokens"] == 100
+
+
+def test_call_with_extra_headers():
+    mock_response = MagicMock()
+    mock_response.choices = [MagicMock()]
+    mock_response.choices[0].message.content = "Test response"
+
+    with patch("irouter.call.OpenAI") as mock_openai:
+        mock_client = MagicMock()
+        mock_client.chat.completions.create.return_value = mock_response
+        mock_openai.return_value = mock_client
+
+        call = Call("test-model")
+        extra_headers = {"HTTP-Referer": "https://mysite.com", "X-Title": "My App"}
+        result = call("Hello", extra_headers=extra_headers)
+
+        assert result == "Test response"
+        call_args = mock_client.chat.completions.create.call_args
+        # Verify that extra_headers are merged with BASE_HEADERS
+        from irouter.base import BASE_HEADERS
+
+        expected_headers = {**BASE_HEADERS, **extra_headers}
+        assert call_args[1]["extra_headers"] == expected_headers

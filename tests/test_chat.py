@@ -175,3 +175,96 @@ def test_chat_construct_user_message_integration():
 
         # Verify construct_user_message was called with the input
         mock_call.construct_user_message.assert_called_once_with("test message")
+
+
+def test_chat_with_extra_body():
+    mock_response = MagicMock()
+    mock_response.choices = [MagicMock()]
+    mock_response.choices[0].message.content = "Chat response"
+    mock_response.usage = MagicMock()
+    mock_response.usage.prompt_tokens = 10
+    mock_response.usage.completion_tokens = 5
+    mock_response.usage.total_tokens = 15
+
+    with patch("irouter.chat.Call") as mock_call_class:
+        mock_call = MagicMock()
+        mock_call._get_resp = Mock(return_value=mock_response)
+        mock_call.construct_user_message = Mock(
+            return_value={"role": "user", "content": "Hello"}
+        )
+        mock_call_class.return_value = mock_call
+
+        chat = Chat("test-model")
+        extra_body = {
+            "provider": {"require_parameters": True},
+            "transforms": ["middle-out"],
+        }
+        result = chat("Hello", extra_body=extra_body)
+
+        assert result == "Chat response"
+        # Verify _get_resp was called with extra_body
+        mock_call._get_resp.assert_called_once_with(
+            "test-model", chat._history["test-model"], {}, extra_body, raw=True
+        )
+
+
+def test_chat_with_kwargs():
+    mock_response = MagicMock()
+    mock_response.choices = [MagicMock()]
+    mock_response.choices[0].message.content = "Chat response"
+    mock_response.usage = MagicMock()
+    mock_response.usage.prompt_tokens = 10
+    mock_response.usage.completion_tokens = 5
+    mock_response.usage.total_tokens = 15
+
+    with patch("irouter.chat.Call") as mock_call_class:
+        mock_call = MagicMock()
+        mock_call._get_resp = Mock(return_value=mock_response)
+        mock_call.construct_user_message = Mock(
+            return_value={"role": "user", "content": "Hello"}
+        )
+        mock_call_class.return_value = mock_call
+
+        chat = Chat("test-model")
+        result = chat("Hello", temperature=0.8, max_tokens=150, top_p=0.9)
+
+        assert result == "Chat response"
+        # Verify _get_resp was called with kwargs
+        mock_call._get_resp.assert_called_once_with(
+            "test-model",
+            chat._history["test-model"],
+            {},
+            {},
+            raw=True,
+            temperature=0.8,
+            max_tokens=150,
+            top_p=0.9,
+        )
+
+
+def test_chat_with_extra_headers():
+    mock_response = MagicMock()
+    mock_response.choices = [MagicMock()]
+    mock_response.choices[0].message.content = "Chat response"
+    mock_response.usage = MagicMock()
+    mock_response.usage.prompt_tokens = 10
+    mock_response.usage.completion_tokens = 5
+    mock_response.usage.total_tokens = 15
+
+    with patch("irouter.chat.Call") as mock_call_class:
+        mock_call = MagicMock()
+        mock_call._get_resp = Mock(return_value=mock_response)
+        mock_call.construct_user_message = Mock(
+            return_value={"role": "user", "content": "Hello"}
+        )
+        mock_call_class.return_value = mock_call
+
+        chat = Chat("test-model")
+        extra_headers = {"HTTP-Referer": "https://mysite.com", "X-Title": "My App"}
+        result = chat("Hello", extra_headers=extra_headers)
+
+        assert result == "Chat response"
+        # Verify _get_resp was called with extra_headers
+        mock_call._get_resp.assert_called_once_with(
+            "test-model", chat._history["test-model"], extra_headers, {}, raw=True
+        )
