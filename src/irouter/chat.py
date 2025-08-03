@@ -46,6 +46,7 @@ class Chat:
         For example, if an image URL or bytes and text are passed, the image will be handled in the LLM call.
         :param extra_headers: Additional headers
         :param extra_body: Openrouter-only API body parameters.
+        For example, to set the free PDF parser plugin: {"plugins": [{"id": "file-parser", "pdf": {"engine": "pdf-text"}}]}.
         **kwargs are passed to the API chat completion call. Common parameters include `temperature` and `max_tokens`.
         :returns: Single response or list based on model count
         """
@@ -100,7 +101,7 @@ class Chat:
         """
         return self._usage if len(self.models) > 1 else self._usage[self.models[0]]
 
-    def set_history(self, history: list[dict]) -> None:
+    def set_history(self, history: list[dict]):
         """Set custom history for a model.
 
         :param history: List of dicts (messages) which define history for a model
@@ -120,20 +121,20 @@ class Chat:
             )
         self._history = history
 
-    def reset_history(self) -> None:
+    def reset_history(self):
         """Reset history for all models."""
         self._history = {
             m: [{"role": "system", "content": self.system}] for m in self.models
         }
 
-    def reset_usage(self) -> None:
+    def reset_usage(self):
         """Reset usage for all models."""
         self._usage = {
             m: {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0}
             for m in self.models
         }
 
-    def reset(self) -> None:
+    def reset(self):
         """Reset history and usage for all models."""
         self.reset_history()
         self.reset_usage()

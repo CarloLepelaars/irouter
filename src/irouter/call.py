@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 from openai import OpenAI
 from openai.types.chat import ChatCompletion
 from fastcore.basics import listify
@@ -49,6 +50,7 @@ class Call:
         If message dicts are provided, no additional system prompt is added.
         :param extra_headers: Additional headers for the Openrouter API.
         :param extra_body: Openrouter-only API body parameters.
+        For example, to set the free PDF parser plugin: {"plugins": [{"id": "file-parser", "pdf": {"engine": "pdf-text"}}]}.
         :param raw: If True, returns the raw ChatCompletion object.
         **kwargs are passed to the API chat completion call. Common parameters include `temperature` and `max_tokens`.
         :returns: Single response or list based on model count.
@@ -97,15 +99,46 @@ class Call:
         """
         content = []
         for m in msg_list:
-            content_type = detect_content_type(m.strip())
+            clean_m = m.strip()
+            content_type = detect_content_type(clean_m)
             if content_type == "image_url":
-                content.append({"type": "image_url", "image_url": {"url": m}})
+                content.append({"type": "image_url", "image_url": {"url": clean_m}})
             elif content_type == "local_image":
                 content.append(
                     {
                         "type": "image_url",
                         "image_url": {
-                            "url": f"data:image/jpeg;base64,{encode_base64(m)}"
+                            "url": f"data:image/jpeg;base64,{encode_base64(clean_m)}"
+                        },
+                    }
+                )
+            elif content_type == "audio":
+                content.append(
+                    {
+                        "type": "input_audio",
+                        "input_audio": {
+                            "data": encode_base64(clean_m),
+                            "format": Path(clean_m).suffix.lower().lstrip("."),
+                        },
+                    }
+                )
+            elif content_type == "local_pdf":
+                content.append(
+                    {
+                        "type": "file",
+                        "file": {
+                            "filename": Path(clean_m).name,
+                            "file_data": f"data:application/pdf;base64,{encode_base64(clean_m)}",
+                        },
+                    }
+                )
+            elif content_type == "pdf_url":
+                content.append(
+                    {
+                        "type": "file",
+                        "file": {
+                            "filename": "document.pdf",
+                            "file_data": clean_m,
                         },
                     }
                 )
@@ -129,18 +162,18 @@ class Call:
         :param extra_headers: Additional headers, overrides BASE_HEADERS if same keys are given.
         Overriding HTTP-Referer and X-Title in extra_headers can be useful if you want to implement your own site tracking on openrouter.ai.
         :param extra_body: Openrouter-only API body parameters.
+        For example, to set the free PDF parser plugin: {"plugins": [{"id": "file-parser", "pdf": {"engine": "pdf-text"}}]}.
         :param raw: Return raw response if True, else content string
         **kwargs are passed to the API chat completion call. Common parameters include `temperature` and `max_tokens`.
         :returns: Response content string or raw ChatCompletion object
         """
-        # By default the base header is defined as irouter so tokens are counted for the openrouter.ai library.
-        # Headers can be overwritten by defining extra_headers.
-        # Check https://openrouter.ai/docs/quickstart for examples of extra headers that can be set.
-        headers = {**BASE_HEADERS, **extra_headers}
         resp = self.client.chat.completions.create(
             model=model,
             messages=messages,
-            extra_headers=headers,
+            # By default the base header is defined as irouter so tokens are counted for the openrouter.ai library.
+            # Headers can be overwritten by defining extra_headers.
+            # Check https://openrouter.ai/docs/quickstart for examples of extra headers that can be set.
+            extra_headers={**BASE_HEADERS, **extra_headers},
             extra_body=extra_body,
             **kwargs,
         )

@@ -1,3 +1,4 @@
+import pytest
 from unittest.mock import patch, mock_open
 from irouter.base import (
     get_all_models,
@@ -55,17 +56,25 @@ def test_detect_content_type():
     assert detect_content_type("https://example.com/page.html") == "text"
     assert detect_content_type("https://example.com/doc.pdf") == "pdf_url"
 
-    # Test local images (mock file existence)
+    # Test local images and audio (mock file existence)
     with patch("irouter.base.Path.exists", return_value=True):
         assert detect_content_type("local_image.jpg") == "local_image"
         assert detect_content_type("./folder/pic.png") == "local_image"
         assert detect_content_type("/path/to/image.webp") == "local_image"
+        assert detect_content_type("audio.mp3") == "audio"
+        assert detect_content_type("./sounds/voice.wav") == "audio"
 
     # Test non-existent local files
     with patch("irouter.base.Path.exists", return_value=False):
-        assert detect_content_type("nonexistent.jpg") == "text"
-        assert detect_content_type("missing.png") == "text"
-        assert detect_content_type("missing.pdf") == "local_pdf"
+        # Non-existent local images, audio and pdf should raise FileNotFoundError
+        with pytest.raises(FileNotFoundError, match="File not found:"):
+            detect_content_type("nonexistent.jpg")
+        with pytest.raises(FileNotFoundError, match="File not found:"):
+            detect_content_type("missing.png")
+        with pytest.raises(FileNotFoundError, match="File not found:"):
+            detect_content_type("missing.mp3")
+        with pytest.raises(FileNotFoundError, match="File not found:"):
+            detect_content_type("missing.pdf")
 
     # Test text content
     assert detect_content_type("Hello world") == "text"

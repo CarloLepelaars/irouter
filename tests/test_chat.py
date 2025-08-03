@@ -266,5 +266,144 @@ def test_chat_with_extra_headers():
         assert result == "Chat response"
         # Verify _get_resp was called with extra_headers
         mock_call._get_resp.assert_called_once_with(
-            "test-model", chat._history["test-model"], extra_headers, {}, raw=True
+            "test-model",
+            chat._history["test-model"],
+            extra_headers,
+            {},
+            raw=True,
         )
+
+
+def test_chat_with_plugins():
+    mock_response = MagicMock()
+    mock_response.choices = [MagicMock()]
+    mock_response.choices[0].message.content = "Chat response"
+    mock_response.usage = MagicMock()
+    mock_response.usage.prompt_tokens = 10
+    mock_response.usage.completion_tokens = 5
+    mock_response.usage.total_tokens = 15
+
+    with patch("irouter.chat.Call") as mock_call_class:
+        mock_call = MagicMock()
+        mock_call._get_resp = Mock(return_value=mock_response)
+        mock_call.construct_user_message = Mock(
+            return_value={"role": "user", "content": "Hello"}
+        )
+        mock_call_class.return_value = mock_call
+
+        chat = Chat("test-model")
+        plugins = [{"id": "file-parser", "pdf": {"engine": "pdf-text"}}]
+        result = chat("Hello", extra_body={"plugins": plugins})
+
+        assert result == "Chat response"
+        # Verify _get_resp was called with plugins in extra_body
+        mock_call._get_resp.assert_called_once_with(
+            "test-model",
+            chat._history["test-model"],
+            {},
+            {"plugins": plugins},
+            raw=True,
+        )
+
+
+def test_chat_with_audio():
+    mock_response = MagicMock()
+    mock_response.choices = [MagicMock()]
+    mock_response.choices[0].message.content = "Audio transcription response"
+    mock_response.usage = MagicMock()
+    mock_response.usage.prompt_tokens = 15
+    mock_response.usage.completion_tokens = 10
+    mock_response.usage.total_tokens = 25
+
+    with patch("irouter.chat.Call") as mock_call_class:
+        mock_call = MagicMock()
+        mock_call._get_resp = Mock(return_value=mock_response)
+
+        # Mock the construct_user_message method for audio content
+        def mock_construct_user_message(message):
+            if isinstance(message, list):
+                return {
+                    "role": "user",
+                    "content": [
+                        {
+                            "type": "input_audio",
+                            "input_audio": {
+                                "data": "base64audio",
+                                "format": "mp3",
+                            },
+                        },
+                        {"type": "text", "text": "Transcribe this"},
+                    ],
+                }
+            return {"role": "user", "content": message}
+
+        mock_call.construct_user_message = Mock(side_effect=mock_construct_user_message)
+        mock_call_class.return_value = mock_call
+
+        chat = Chat("test-model")
+        result = chat(["audio.mp3", "Transcribe this"])
+
+        assert result == "Audio transcription response"
+
+        # Test that audio content is properly tracked in history
+        assert len(chat.history) == 3  # system + user + assistant
+
+        user_message = chat.history[1]
+        assert user_message["role"] == "user"
+        assert isinstance(user_message["content"], list)
+        assert user_message["content"][0]["type"] == "input_audio"
+        assert user_message["content"][1]["type"] == "text"
+
+
+def test_chat_with_pdf():
+    mock_response = MagicMock()
+    mock_response.choices = [MagicMock()]
+    mock_response.choices[0].message.content = "PDF analysis response"
+    mock_response.usage = MagicMock()
+    mock_response.usage.prompt_tokens = 20
+    mock_response.usage.completion_tokens = 15
+    mock_response.usage.total_tokens = 35
+
+    with patch("irouter.chat.Call") as mock_call_class:
+        mock_call = MagicMock()
+        mock_call._get_resp = Mock(return_value=mock_response)
+
+        # Mock the construct_user_message method for PDF content
+        def mock_construct_user_message(message):
+            if isinstance(message, list):
+                return {
+                    "role": "user",
+                    "content": [
+                        {
+                            "type": "file",
+                            "file": {
+                                "filename": "document.pdf",
+                                "file_data": "data:application/pdf;base64,base64pdf",
+                            },
+                        },
+                        {"type": "text", "text": "Analyze this document"},
+                    ],
+                }
+            return {"role": "user", "content": message}
+
+        mock_call.construct_user_message = Mock(side_effect=mock_construct_user_message)
+        mock_call_class.return_value = mock_call
+
+        chat = Chat("test-model")
+        result = chat(["document.pdf", "Analyze this document"])
+
+        assert result == "PDF analysis response"
+
+        # Test that PDF content is properly tracked in history
+        assert len(chat.history) == 3  # system + user + assistant
+
+        user_message = chat.history[1]
+        assert user_message["role"] == "user"
+        assert isinstance(user_message["content"], list)
+        assert user_message["content"][0]["type"] == "file"
+        assert user_message["content"][1]["type"] == "text"
+
+        # Test usage tracking still works with PDFs
+        assert chat.usage["prompt_tokens"] == 20
+        assert chat.usage["completion_tokens"] == 15
+        assert chat.usage["total_tokens"] == 35

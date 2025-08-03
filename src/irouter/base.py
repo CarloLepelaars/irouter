@@ -44,12 +44,15 @@ def detect_content_type(item: Any) -> str:
     PDFs:
     4. "pdf_url" if item is a URL and ends with a PDF extension.
     5. "local_pdf" if item is a local file path and ends with a PDF extension.
+    Audio:
+    6. "audio" if item is a local file path and ends with a supported audio extension.
 
     :param item: Item to detect content type of.
     :returns: Content type of item.
     """
     if isinstance(item, str):
         SUPPORTED_IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp"}
+        SUPPORTED_AUDIO_EXTENSIONS = {".mp3", ".wav"}
         parsed = urlparse(item)
         suffix = Path(parsed.path).suffix.lower()
         # URLs
@@ -60,10 +63,19 @@ def detect_content_type(item: Any) -> str:
                 return "pdf_url"
         # Local files
         else:
-            if suffix == ".pdf":
-                return "local_pdf"
-            elif Path(item).exists() and suffix in SUPPORTED_IMAGE_EXTENSIONS:
-                return "local_image"
+            if (
+                suffix
+                in {".pdf"} | SUPPORTED_IMAGE_EXTENSIONS | SUPPORTED_AUDIO_EXTENSIONS
+            ):
+                path = Path(item)
+                if not path.exists():
+                    raise FileNotFoundError(f"File not found: {item}")
+                if suffix == ".pdf":
+                    return "local_pdf"
+                elif suffix in SUPPORTED_IMAGE_EXTENSIONS:
+                    return "local_image"
+                elif suffix in SUPPORTED_AUDIO_EXTENSIONS:
+                    return "audio"
     return "text"
 
 

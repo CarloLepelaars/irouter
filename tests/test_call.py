@@ -78,13 +78,23 @@ def test_construct_content():
         patch("irouter.call.detect_content_type") as mock_detect,
         patch("irouter.call.encode_base64", return_value="base64data"),
     ):
-        mock_detect.side_effect = ["image_url", "text", "local_image"]
+        mock_detect.side_effect = [
+            "image_url",
+            "text",
+            "local_image",
+            "audio",
+            "local_pdf",
+            "pdf_url",
+        ]
 
         result = call.construct_content(
             [
                 "https://example.com/image.jpg",
                 "What is in the image?",
                 "local_image.png",
+                "audio.wav",
+                "document.pdf",
+                "https://example.com/doc.pdf",
             ]
         )
 
@@ -97,6 +107,27 @@ def test_construct_content():
             {
                 "type": "image_url",
                 "image_url": {"url": "data:image/jpeg;base64,base64data"},
+            },
+            {
+                "type": "input_audio",
+                "input_audio": {
+                    "data": "base64data",
+                    "format": "wav",
+                },
+            },
+            {
+                "type": "file",
+                "file": {
+                    "filename": "document.pdf",
+                    "file_data": "data:application/pdf;base64,base64data",
+                },
+            },
+            {
+                "type": "file",
+                "file": {
+                    "filename": "document.pdf",
+                    "file_data": "https://example.com/doc.pdf",
+                },
             },
         ]
         assert result == expected
@@ -199,3 +230,93 @@ def test_call_with_extra_headers():
 
         expected_headers = {**BASE_HEADERS, **extra_headers}
         assert call_args[1]["extra_headers"] == expected_headers
+
+
+def test_call_with_plugins():
+    mock_response = MagicMock()
+    mock_response.choices = [MagicMock()]
+    mock_response.choices[0].message.content = "Test response"
+
+    with patch("irouter.call.OpenAI") as mock_openai:
+        mock_client = MagicMock()
+        mock_client.chat.completions.create.return_value = mock_response
+        mock_openai.return_value = mock_client
+
+        call = Call("test-model")
+        plugins = [{"id": "file-parser", "pdf": {"engine": "mistral-ocr"}}]
+        result = call("Hello", extra_body={"plugins": plugins})
+
+        assert result == "Test response"
+        call_args = mock_client.chat.completions.create.call_args
+        assert call_args[1]["extra_body"]["plugins"] == plugins
+
+
+def test_call_with_audio():
+    mock_response = MagicMock()
+    mock_response.choices = [MagicMock()]
+    mock_response.choices[0].message.content = "Audio transcription"
+
+    with (
+        patch("irouter.call.OpenAI") as mock_openai,
+        patch("irouter.call.detect_content_type") as mock_detect,
+        patch("irouter.call.encode_base64", return_value="base64audio"),
+    ):
+        mock_client = MagicMock()
+        mock_client.chat.completions.create.return_value = mock_response
+        mock_openai.return_value = mock_client
+
+        mock_detect.side_effect = ["audio", "text"]
+
+        call = Call("test-model")
+        result = call(["audio.mp3", "Transcribe this audio"])
+
+        assert result == "Audio transcription"
+
+        # Verify the message structure sent to API
+        call_args = mock_client.chat.completions.create.call_args
+        messages = call_args[1]["messages"]
+
+        user_message = messages[0]
+        assert user_message["role"] == "user"
+        assert len(user_message["content"]) == 2
+        assert user_message["content"][0]["type"] == "input_audio"
+        assert user_message["content"][0]["input_audio"]["data"] == "base64audio"
+        assert user_message["content"][0]["input_audio"]["format"] == "mp3"
+        assert user_message["content"][1]["type"] == "text"
+
+
+def test_call_with_pdf():
+    mock_response = MagicMock()
+    mock_response.choices = [MagicMock()]
+    mock_response.choices[0].message.content = "PDF analysis"
+
+    with (
+        patch("irouter.call.OpenAI") as mock_openai,
+        patch("irouter.call.detect_content_type") as mock_detect,
+        patch("irouter.call.encode_base64", return_value="base64pdf"),
+    ):
+        mock_client = MagicMock()
+        mock_client.chat.completions.create.return_value = mock_response
+        mock_openai.return_value = mock_client
+
+        mock_detect.side_effect = ["local_pdf", "text"]
+
+        call = Call("test-model")
+        result = call(["document.pdf", "What are the main points?"])
+
+        assert result == "PDF analysis"
+
+        # Verify the message structure sent to API
+        call_args = mock_client.chat.completions.create.call_args
+        messages = call_args[1]["messages"]
+
+        user_message = messages[0]
+        assert user_message["role"] == "user"
+        assert len(user_message["content"]) == 2
+        assert user_message["content"][0]["type"] == "file"
+        assert user_message["content"][0]["file"]["filename"] == "document.pdf"
+        assert (
+            user_message["content"][0]["file"]["file_data"]
+            == "data:application/pdf;base64,base64pdf"
+        )
+        assert user_message["content"][1]["type"] == "text"
