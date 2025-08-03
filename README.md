@@ -125,6 +125,21 @@ print(ic.history)
 
 For more information on `Chat`, check out the `chat.ipynb` notebook in the `nbs` folder.
 
+### PDF Support
+
+Both `Call` and `Chat` support PDF processing from URLs or local files.
+
+```python
+from irouter import Call
+c = Call("moonshotai/kimi-k2:free")
+pdf_url = "https://proceedings.neurips.cc/paper_files/paper/2017/file/3f5ee243547dee91fbd053c1c4a845aa-Paper.pdf"
+c([pdf_url, "What is the main contribution of this paper?"])
+
+# Configure custom PDF parsing with extra_body. `pdf-text` is a free PDF parsing engine.
+extra_body = {"plugins": [{"id": "file-parser", "pdf": {"engine": "pdf-text"}}]}
+c([pdf_url, "What is the main contribution of this paper?"], extra_body=extra_body)
+```
+
 ### Misc
 
 #### `get_all_models`
