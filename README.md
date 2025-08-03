@@ -90,7 +90,7 @@ print(c.usage)
 # 'google/gemini-2.0-flash-exp:free': {'prompt_tokens': 8, 'completion_tokens': 10, 'total_tokens': 18}}
 ```
 
-### Images
+### Image
 
 Both `Call` and `Chat` support images from image URLs or local images.
 

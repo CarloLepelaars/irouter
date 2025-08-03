@@ -1,6 +1,6 @@
 [project]
 name = "irouter"
-version = "0.1.1"
+version = "0.1.2"
 description = "Easy access to 100s of LLMs with a few lines of code (using Openrouter)."
 authors = [
     {name = "Carlo Lepelaars", email = "info@carlolepelaars.nl"},
@@ -11,8 +11,6 @@ requires-python = ">=3.10,<4"
 
 dependencies = [
     "fastcore>=1.8.7",
-    "fastprogress>=1.0.3",
-    "fasttransform>=0.0.2",
     "openai",
     "ipython>=8.37.0",
 ]
