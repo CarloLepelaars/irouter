@@ -459,6 +459,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#pdf-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      PDF Support
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#misc" class="md-nav__link">
     <span class="md-ellipsis">
       Misc
@@ -744,6 +753,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#pdf-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      PDF Support
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#misc" class="md-nav__link">
     <span class="md-ellipsis">
       Misc
@@ -899,17 +917,28 @@
 <a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="c1">#  {&#39;role&#39;: &#39;assistant&#39;, &#39;content&#39;: &#39;The image shows a cute puppy...&#39;}]</span>
 </code></pre></div>
 <p>For more information on <code>Chat</code>, check out the <code>chat.ipynb</code> notebook in the <code>nbs</code> folder.</p>
+<h3 id="pdf-support">PDF Support</h3>
+<p>Both <code>Call</code> and <code>Chat</code> support PDF processing from URLs or local files.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">irouter</span><span class="w"> </span><span class="kn">import</span> <span class="n">Call</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="n">c</span> <span class="o">=</span> <span class="n">Call</span><span class="p">(</span><span class="s2">&quot;moonshotai/kimi-k2:free&quot;</span><span class="p">)</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="n">pdf_url</span> <span class="o">=</span> <span class="s2">&quot;https://proceedings.neurips.cc/paper_files/paper/2017/file/3f5ee243547dee91fbd053c1c4a845aa-Paper.pdf&quot;</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="n">c</span><span class="p">([</span><span class="n">pdf_url</span><span class="p">,</span> <span class="s2">&quot;What is the main contribution of this paper?&quot;</span><span class="p">])</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="c1"># Configure custom PDF parsing with extra_body. `pdf-text` is a free PDF parsing engine.</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="n">extra_body</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;plugins&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;file-parser&quot;</span><span class="p">,</span> <span class="s2">&quot;pdf&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;engine&quot;</span><span class="p">:</span> <span class="s2">&quot;pdf-text&quot;</span><span class="p">}}]}</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="n">c</span><span class="p">([</span><span class="n">pdf_url</span><span class="p">,</span> <span class="s2">&quot;What is the main contribution of this paper?&quot;</span><span class="p">],</span> <span class="n">extra_body</span><span class="o">=</span><span class="n">extra_body</span><span class="p">)</span>
+</code></pre></div>
 <h3 id="misc">Misc</h3>
 <h4 id="get_all_models"><code>get_all_models</code></h4>
 <p>You can easily get all 300+ models available with <code>irouter</code> using <code>get_all_models</code>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">irouter.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_all_models</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="n">get_all_models</span><span class="p">()</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="c1"># [&#39;llm_provider1/model1&#39;, ... &#39;llm_providerx/modelx&#39;]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">irouter.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_all_models</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="n">get_all_models</span><span class="p">()</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="c1"># [&#39;llm_provider1/model1&#39;, ... &#39;llm_providerx/modelx&#39;]</span>
 </code></pre></div>
 <h4 id="history_to_markdown"><code>history_to_markdown</code></h4>
 <p>Convert chat history to markdown for easy display in Jupyter notebooks.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">irouter.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">history_to_markdown</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="n">history_to_markdown</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">history</span><span class="p">,</span> <span class="n">ipython</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">irouter.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">history_to_markdown</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="n">history_to_markdown</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">history</span><span class="p">,</span> <span class="n">ipython</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="credits">Credits</h2>
 <p>This project is built on top of the <a href="https://openrouter.ai">OpenRouter</a> API infrastructure, which provides access to LLMs through a unified interface.</p>
