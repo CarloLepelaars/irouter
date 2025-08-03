@@ -651,7 +651,16 @@
 <a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="n">history_to_markdown</span><span class="p">(</span><span class="n">chat</span><span class="o">.</span><span class="n">history</span><span class="p">,</span> <span class="n">ipython</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="detect_content_type">detect_content_type</h2>
-<p>Detect if content is text, image URL, or local image:</p>
+<p>Detect what content is passed. The possible values are:
+1. "text" if the item is a non-string or doesn't belong to any of the other categories.
+Images:
+2. "image_url" if item is a URL and ends with a supported image extension.
+3. "local_image" if item is a local file path and ends with a supported image extension.
+PDFs:
+4. "pdf_url" if item is a URL and ends with a PDF extension.
+5. "local_pdf" if item is a local file path and ends with a PDF extension.
+Audio:
+6. "audio" if item is a local file path and ends with a supported audio extension.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">irouter.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">detect_content_type</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Image URL detection</span>
