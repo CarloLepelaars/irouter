@@ -545,9 +545,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#image-support" class="md-nav__link">
+  <a href="#images" class="md-nav__link">
     <span class="md-ellipsis">
-      Image Support
+      Images
     </span>
   </a>
   
@@ -557,6 +557,24 @@
   <a href="#pdf-support" class="md-nav__link">
     <span class="md-ellipsis">
       PDF Support
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#audio-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      Audio Support
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multiple-modalities" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multiple Modalities
     </span>
   </a>
   
@@ -949,9 +967,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#image-support" class="md-nav__link">
+  <a href="#images" class="md-nav__link">
     <span class="md-ellipsis">
-      Image Support
+      Images
     </span>
   </a>
   
@@ -961,6 +979,24 @@
   <a href="#pdf-support" class="md-nav__link">
     <span class="md-ellipsis">
       PDF Support
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#audio-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      Audio Support
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multiple-modalities" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multiple Modalities
     </span>
   </a>
   
@@ -1095,7 +1131,7 @@
 <a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># {&#39;moonshotai/kimi-k2:free&#39;: {&#39;prompt_tokens&#39;: 8, &#39;completion_tokens&#39;: 8, &#39;total_tokens&#39;: 16}, </span>
 <a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># &#39;google/gemini-2.0-flash-exp:free&#39;: {&#39;prompt_tokens&#39;: 8, &#39;completion_tokens&#39;: 10, &#39;total_tokens&#39;: 18}}</span>
 </code></pre></div>
-<h3 id="image-support">Image Support</h3>
+<h3 id="images">Images</h3>
 <p>Both <code>Call</code> and <code>Chat</code> support images from image URLs or local images.</p>
 <p>Adding images is as simple as providing a list of strings with:
 - text and/or
@@ -1128,22 +1164,33 @@
 <a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="n">c</span> <span class="o">=</span> <span class="n">Call</span><span class="p">(</span><span class="s2">&quot;moonshotai/kimi-k2:free&quot;</span><span class="p">)</span>
 <a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="n">pdf_url</span> <span class="o">=</span> <span class="s2">&quot;https://proceedings.neurips.cc/paper_files/paper/2017/file/3f5ee243547dee91fbd053c1c4a845aa-Paper.pdf&quot;</span>
 <a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="n">c</span><span class="p">([</span><span class="n">pdf_url</span><span class="p">,</span> <span class="s2">&quot;What is the main contribution of this paper?&quot;</span><span class="p">])</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="c1"># Configure custom PDF parsing with extra_body. `pdf-text` is a free PDF parsing engine.</span>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="n">extra_body</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;plugins&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;file-parser&quot;</span><span class="p">,</span> <span class="s2">&quot;pdf&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;engine&quot;</span><span class="p">:</span> <span class="s2">&quot;pdf-text&quot;</span><span class="p">}}]}</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="n">c</span><span class="p">([</span><span class="n">pdf_url</span><span class="p">,</span> <span class="s2">&quot;What is the main contribution of this paper?&quot;</span><span class="p">],</span> <span class="n">extra_body</span><span class="o">=</span><span class="n">extra_body</span><span class="p">)</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># &#39;The main contribution of this paper is the introduction of the Transformer architecture...&#39;</span>
+</code></pre></div>
+<h3 id="audio-support">Audio Support</h3>
+<p>Some LLMs have native audio support. Simply pass a local filepath that points to a <code>.mp3</code> or <code>.wav</code> file with the instruction as a list of strings.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">irouter</span><span class="w"> </span><span class="kn">import</span> <span class="n">Call</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="n">c</span> <span class="o">=</span> <span class="n">Call</span><span class="p">(</span><span class="s2">&quot;google/gemini-2.5-flash&quot;</span><span class="p">)</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="n">c</span><span class="p">([</span><span class="s2">&quot;../assets/bottles.mp3&quot;</span><span class="p">,</span> <span class="s2">&quot;What do you hear?&quot;</span><span class="p">])</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># &#39;I hear the sound of a glass bottle being opened and closed...&#39;</span>
+</code></pre></div>
+<h3 id="multiple-modalities">Multiple Modalities</h3>
+<p>Combine text, images, PDFs, and audio in a single request by simply passing a list of strings.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">irouter</span><span class="w"> </span><span class="kn">import</span> <span class="n">Call</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="n">c</span> <span class="o">=</span> <span class="n">Call</span><span class="p">(</span><span class="s2">&quot;google/gemini-2.5-flash&quot;</span><span class="p">)</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="n">c</span><span class="p">([</span><span class="s2">&quot;../assets/bottles.mp3&quot;</span><span class="p">,</span> <span class="s2">&quot;../assets/puppy.jpg&quot;</span><span class="p">,</span> <span class="s2">&quot;What do you hear and see?&quot;</span><span class="p">])</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># &#39;I hear sounds of glass and see a small, fluffy dog...&#39;</span>
 </code></pre></div>
 <h3 id="misc">Misc</h3>
 <h4 id="get_all_models"><code>get_all_models</code></h4>
 <p>You can easily get all 300+ models available with <code>irouter</code> using <code>get_all_models</code>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">irouter.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_all_models</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="n">get_all_models</span><span class="p">()</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="c1"># [&#39;llm_provider1/model1&#39;, ... &#39;llm_providerx/modelx&#39;]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">irouter.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_all_models</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="n">get_all_models</span><span class="p">()</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="c1"># [&#39;llm_provider1/model1&#39;, ... &#39;llm_providerx/modelx&#39;]</span>
 </code></pre></div>
 <h4 id="history_to_markdown"><code>history_to_markdown</code></h4>
 <p>Convert chat history to markdown for easy display in Jupyter notebooks.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">irouter.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">history_to_markdown</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="n">history_to_markdown</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">history</span><span class="p">,</span> <span class="n">ipython</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">irouter.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">history_to_markdown</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="n">history_to_markdown</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">history</span><span class="p">,</span> <span class="n">ipython</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="credits">Credits</h2>
 <p>This project is built on top of the <a href="https://openrouter.ai">OpenRouter</a> API infrastructure, which provides access to LLMs through a unified interface.</p>
