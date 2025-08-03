@@ -48,6 +48,7 @@ nav:
   - Chat: chat.md
   - Contributing: contributing.md
   - Disclaimer: disclaimer.md
+  - llms.txt: llms.txt
 
 plugins:
   - mkdocstrings:

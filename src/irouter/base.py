@@ -24,14 +24,14 @@ def get_all_models(slug: bool = True) -> list[str]:
     return [m["canonical_slug" if slug else "name"] for m in data]
 
 
-def encode_base64(image_path: str) -> str:
-    """Encode image to base64.
+def encode_base64(path: str) -> str:
+    """Encode to base64.
 
-    :param image_path: Path to image.
-    :returns: Base64 encoded image.
+    :param path: Path to file.
+    :returns: Base64 encoded file.
     """
-    with open(image_path, "rb") as image_file:
-        return base64.b64encode(image_file.read()).decode("utf-8")
+    with open(path, "rb") as file:
+        return base64.b64encode(file.read()).decode("utf-8")
 
 
 def detect_content_type(item: Any) -> str:
