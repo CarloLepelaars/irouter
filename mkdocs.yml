@@ -46,6 +46,10 @@ nav:
   - Base: base.md
   - Call: call.md
   - Chat: chat.md
+  - Image: img.md
+  - PDF: pdf.md
+  - Audio: audio.md
+  - Multimodal: multimodal.md
   - Contributing: contributing.md
   - Disclaimer: disclaimer.md
   - llms.txt: llms.txt
