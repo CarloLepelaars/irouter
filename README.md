@@ -29,7 +29,7 @@ In this way you can use `irouter` objects like `Call` and `Chat` without have to
 
 ```python
 from irouter import Call
-c = Call(model="moonshotai/kimi-k2:free")
+c = Call("moonshotai/kimi-k2:free")
 c("How are you?")
 ```
 
@@ -37,7 +37,7 @@ c("How are you?")
 
 ```python
 from irouter import Call
-c = Call(model="moonshotai/kimi-k2:free", api_key="your_api_key")
+c = Call("moonshotai/kimi-k2:free", api_key="your_api_key")
 c("How are you?")
 ```
 
@@ -45,12 +45,14 @@ c("How are you?")
 
 ### Call
 
-`Call` is the simplest interface to call one or more LLMs.
+`Call` is the simplest interface to have one-off interactions with one or more LLMs. 
+
+For conversational interactions use `Chat`, which tracks message history and token usage.
 
 #### Single LLM
 ```python
 from irouter import Call
-c = Call(model="moonshotai/kimi-k2:free")
+c = Call("moonshotai/kimi-k2:free")
 c("Who are you?")
 # "I'm Kimi, your AI friend from Moonshot AI. I'm here to chat, answer your questions, and help you out whenever you need it."
 ```
@@ -141,7 +143,7 @@ c(["https://proceedings.neurips.cc/paper_files/paper/2017/file/3f5ee243547dee91f
 
 ### Audio
 
-Some LLMs have native audio support. Simply pass a local filepath that points to a `.mp3` or `.wav` file with the instruction as a list of strings.
+Some LLMs have native audio support. Simply pass a local filepath that points to a `.mp3` or `.wav` file with an instruction as a list of strings.
 
 ```python
 from irouter import Call
@@ -152,7 +154,7 @@ c(["../assets/bottles.mp3", "What do you hear?"])
 
 ### Multiple Modalities
 
-Combine text, images, PDFs, and audio in a single request by simply passing a list of strings.
+Combine text, images, PDFs, and audio in a single request. Simply pass a list of strings containing URLs, filepaths and/or text.
 
 ```python
 from irouter import Call
@@ -165,7 +167,9 @@ c(["../assets/bottles.mp3", "../assets/puppy.jpg", "What do you hear and see?"])
 
 #### `get_all_models`
 
-You can easily get all 300+ models available with `irouter` using `get_all_models`.
+You can easily get an overview of all 300+ models available using `get_all_models`.
+
+Alternatively, browse [OpenRouter's models page](https://openrouter.ai/models) to view supported models on `irouter`.
 
 ```python
 from irouter.base import get_all_models
@@ -175,7 +179,7 @@ get_all_models()
 
 #### `history_to_markdown`
 
-Convert chat history to markdown for easy display in Jupyter notebooks.
+Convert chat history to markdown for display in Jupyter notebooks.
 
 ```python
 from irouter.base import history_to_markdown
@@ -188,4 +192,4 @@ This project is built on top of the [OpenRouter](https://openrouter.ai) API infr
 
 This project is inspired by [Answer.AI's](https://www.answer.ai) projects like [cosette](https://github.com/AnswerDotAI/cosette) and [claudette](https://github.com/AnswerDotAI/claudette).
 
-`irouter` generalizes this idea to support 100s of LLMs, which includes OpenAI and Anthropic models and more, thanks to [OpenRouter's](https://openrouter.ai) infrastructure.
+`irouter` generalizes this idea to support 100s of LLMs, which includes OpenAI, Anthropic and more. This is possible thanks to [OpenRouter's](https://openrouter.ai) infrastructure.
