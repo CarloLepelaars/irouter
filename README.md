@@ -30,6 +30,7 @@ In this way you can use `irouter` objects like `Call` and `Chat` without have to
 ```python
 from irouter import Call
 c = Call(model="moonshotai/kimi-k2:free")
+c("How are you?")
 ```
 
 3b. Alternatively, pass `api_key` to `irouter` objects like `Call` and `Chat`.
@@ -37,6 +38,7 @@ c = Call(model="moonshotai/kimi-k2:free")
 ```python
 from irouter import Call
 c = Call(model="moonshotai/kimi-k2:free", api_key="your_api_key")
+c("How are you?")
 ```
 
 ## Usage
@@ -56,7 +58,7 @@ c("Who are you?")
 #### Multiple LLMs
 ```python
 from irouter import Call
-c = Call(model=["moonshotai/kimi-k2:free", "google/gemini-2.0-flash-exp:free"])
+c = Call(["moonshotai/kimi-k2:free", "google/gemini-2.0-flash-exp:free"])
 c("Who are you?")
 # {'moonshotai/kimi-k2:free': "I'm Kimi, your AI friend from Moonshot AI. I'm here to chat, answer your questions, and help you out whenever you need it.",
 #  'google/gemini-2.0-flash-exp:free': 'I am a large language model, trained by Google.\n'}
@@ -70,7 +72,7 @@ c("Who are you?")
 
 ```python
 from irouter import Chat
-c = Chat(model="moonshotai/kimi-k2:free")
+c = Chat("moonshotai/kimi-k2:free")
 c("Who are you?")
 print(c.history) # {'moonshotai/kimi-k2:free': [...]}
 print(c.usage) # {'moonshotai/kimi-k2:free': {'prompt_tokens': 8, 'completion_tokens': 8, 'total_tokens': 16}}
@@ -80,7 +82,7 @@ print(c.usage) # {'moonshotai/kimi-k2:free': {'prompt_tokens': 8, 'completion_to
 
 ```python
 from irouter import Chat
-c = Chat(model=["moonshotai/kimi-k2:free", "google/gemini-2.0-flash-exp:free"])
+c = Chat(["moonshotai/kimi-k2:free", "google/gemini-2.0-flash-exp:free"])
 c("Who are you?")
 print(c.history) 
 # {'moonshotai/kimi-k2:free': [...], 
@@ -125,19 +127,19 @@ print(ic.history)
 
 For more information on `Chat`, check out the `chat.ipynb` notebook in the `nbs` folder.
 
-### PDF Support
+### PDF
 
 Both `Call` and `Chat` support PDF processing from URLs or local files.
 
 ```python
 from irouter import Call
 c = Call("moonshotai/kimi-k2:free")
-pdf_url = "https://proceedings.neurips.cc/paper_files/paper/2017/file/3f5ee243547dee91fbd053c1c4a845aa-Paper.pdf"
-c([pdf_url, "What is the main contribution of this paper?"])
+c(["https://proceedings.neurips.cc/paper_files/paper/2017/file/3f5ee243547dee91fbd053c1c4a845aa-Paper.pdf", 
+   "What is the main contribution of this paper?"])
 # 'The main contribution of this paper is the introduction of the Transformer architecture...'
 ```
 
-### Audio Support
+### Audio
 
 Some LLMs have native audio support. Simply pass a local filepath that points to a `.mp3` or `.wav` file with the instruction as a list of strings.
 

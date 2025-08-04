@@ -1,6 +1,6 @@
 # Disclaimer
 
-**This project is not officially affiliated with OpenRouter.ai.** `irouter` is an independent open source project that builds on the OpenRouter API to provide simplified access and additional functionality.
+**This project is not officially affiliated with OpenRouter.ai.** `irouter` ("Intelligence Router") is an independent open source project that builds on the OpenRouter API to provide simplified access and additional functionality.
 
 Software is provided "AS IS" under an MIT licence. We cannot guarantee all API interactions or computations will be correct. The software is tested to the best of our ability, but correct results are not guaranteed.
 
