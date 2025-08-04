@@ -1089,20 +1089,21 @@
 </code></pre></div>
 <p>In this way you can use <code>irouter</code> objects like <code>Call</code> and <code>Chat</code> without have to pass an API key.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">irouter</span><span class="w"> </span><span class="kn">import</span> <span class="n">Call</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">c</span> <span class="o">=</span> <span class="n">Call</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;moonshotai/kimi-k2:free&quot;</span><span class="p">)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">c</span> <span class="o">=</span> <span class="n">Call</span><span class="p">(</span><span class="s2">&quot;moonshotai/kimi-k2:free&quot;</span><span class="p">)</span>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">c</span><span class="p">(</span><span class="s2">&quot;How are you?&quot;</span><span class="p">)</span>
 </code></pre></div>
 <p>3b. Alternatively, pass <code>api_key</code> to <code>irouter</code> objects like <code>Call</code> and <code>Chat</code>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">irouter</span><span class="w"> </span><span class="kn">import</span> <span class="n">Call</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">c</span> <span class="o">=</span> <span class="n">Call</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;moonshotai/kimi-k2:free&quot;</span><span class="p">,</span> <span class="n">api_key</span><span class="o">=</span><span class="s2">&quot;your_api_key&quot;</span><span class="p">)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">c</span> <span class="o">=</span> <span class="n">Call</span><span class="p">(</span><span class="s2">&quot;moonshotai/kimi-k2:free&quot;</span><span class="p">,</span> <span class="n">api_key</span><span class="o">=</span><span class="s2">&quot;your_api_key&quot;</span><span class="p">)</span>
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">c</span><span class="p">(</span><span class="s2">&quot;How are you?&quot;</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="usage">Usage</h2>
 <h3 id="call">Call</h3>
-<p><code>Call</code> is the simplest interface to call one or more LLMs.</p>
+<p><code>Call</code> is the simplest interface to have one-off interactions with one or more LLMs. </p>
+<p>For conversational interactions use <code>Chat</code>, which tracks message history and token usage.</p>
 <h4 id="single-llm">Single LLM</h4>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">irouter</span><span class="w"> </span><span class="kn">import</span> <span class="n">Call</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">c</span> <span class="o">=</span> <span class="n">Call</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;moonshotai/kimi-k2:free&quot;</span><span class="p">)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">c</span> <span class="o">=</span> <span class="n">Call</span><span class="p">(</span><span class="s2">&quot;moonshotai/kimi-k2:free&quot;</span><span class="p">)</span>
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">c</span><span class="p">(</span><span class="s2">&quot;Who are you?&quot;</span><span class="p">)</span>
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># &quot;I&#39;m Kimi, your AI friend from Moonshot AI. I&#39;m here to chat, answer your questions, and help you out whenever you need it.&quot;</span>
 </code></pre></div>
@@ -1169,14 +1170,14 @@
 <a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># &#39;The main contribution of this paper is the introduction of the Transformer architecture...&#39;</span>
 </code></pre></div>
 <h3 id="audio">Audio</h3>
-<p>Some LLMs have native audio support. Simply pass a local filepath that points to a <code>.mp3</code> or <code>.wav</code> file with the instruction as a list of strings.</p>
+<p>Some LLMs have native audio support. Simply pass a local filepath that points to a <code>.mp3</code> or <code>.wav</code> file with an instruction as a list of strings.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">irouter</span><span class="w"> </span><span class="kn">import</span> <span class="n">Call</span>
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="n">c</span> <span class="o">=</span> <span class="n">Call</span><span class="p">(</span><span class="s2">&quot;google/gemini-2.5-flash&quot;</span><span class="p">)</span>
 <a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="n">c</span><span class="p">([</span><span class="s2">&quot;../assets/bottles.mp3&quot;</span><span class="p">,</span> <span class="s2">&quot;What do you hear?&quot;</span><span class="p">])</span>
 <a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># &#39;I hear the sound of a glass bottle being opened and closed...&#39;</span>
 </code></pre></div>
 <h3 id="multiple-modalities">Multiple Modalities</h3>
-<p>Combine text, images, PDFs, and audio in a single request by simply passing a list of strings.</p>
+<p>Combine text, images, PDFs, and audio in a single request. Simply pass a list of strings containing URLs, filepaths and/or text.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">irouter</span><span class="w"> </span><span class="kn">import</span> <span class="n">Call</span>
 <a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="n">c</span> <span class="o">=</span> <span class="n">Call</span><span class="p">(</span><span class="s2">&quot;google/gemini-2.5-flash&quot;</span><span class="p">)</span>
 <a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="n">c</span><span class="p">([</span><span class="s2">&quot;../assets/bottles.mp3&quot;</span><span class="p">,</span> <span class="s2">&quot;../assets/puppy.jpg&quot;</span><span class="p">,</span> <span class="s2">&quot;What do you hear and see?&quot;</span><span class="p">])</span>
@@ -1184,20 +1185,21 @@
 </code></pre></div>
 <h3 id="misc">Misc</h3>
 <h4 id="get_all_models"><code>get_all_models</code></h4>
-<p>You can easily get all 300+ models available with <code>irouter</code> using <code>get_all_models</code>.</p>
+<p>You can easily get an overview of all 300+ models available using <code>get_all_models</code>.</p>
+<p>Alternatively, browse <a href="https://openrouter.ai/models">OpenRouter's models page</a> to view supported models on <code>irouter</code>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">irouter.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_all_models</span>
 <a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="n">get_all_models</span><span class="p">()</span>
 <a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="c1"># [&#39;llm_provider1/model1&#39;, ... &#39;llm_providerx/modelx&#39;]</span>
 </code></pre></div>
 <h4 id="history_to_markdown"><code>history_to_markdown</code></h4>
-<p>Convert chat history to markdown for easy display in Jupyter notebooks.</p>
+<p>Convert chat history to markdown for display in Jupyter notebooks.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">irouter.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">history_to_markdown</span>
 <a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="n">history_to_markdown</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">history</span><span class="p">,</span> <span class="n">ipython</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="credits">Credits</h2>
 <p>This project is built on top of the <a href="https://openrouter.ai">OpenRouter</a> API infrastructure, which provides access to LLMs through a unified interface.</p>
 <p>This project is inspired by <a href="https://www.answer.ai">Answer.AI's</a> projects like <a href="https://github.com/AnswerDotAI/cosette">cosette</a> and <a href="https://github.com/AnswerDotAI/claudette">claudette</a>.</p>
-<p><code>irouter</code> generalizes this idea to support 100s of LLMs, which includes OpenAI and Anthropic models and more, thanks to <a href="https://openrouter.ai">OpenRouter's</a> infrastructure.</p>
+<p><code>irouter</code> generalizes this idea to support 100s of LLMs, which includes OpenAI, Anthropic and more. This is possible thanks to <a href="https://openrouter.ai">OpenRouter's</a> infrastructure.</p>
 
 
 
