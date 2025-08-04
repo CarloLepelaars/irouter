@@ -554,18 +554,18 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#pdf-support" class="md-nav__link">
+  <a href="#pdf" class="md-nav__link">
     <span class="md-ellipsis">
-      PDF Support
+      PDF
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#audio-support" class="md-nav__link">
+  <a href="#audio" class="md-nav__link">
     <span class="md-ellipsis">
-      Audio Support
+      Audio
     </span>
   </a>
   
@@ -976,18 +976,18 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#pdf-support" class="md-nav__link">
+  <a href="#pdf" class="md-nav__link">
     <span class="md-ellipsis">
-      PDF Support
+      PDF
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#audio-support" class="md-nav__link">
+  <a href="#audio" class="md-nav__link">
     <span class="md-ellipsis">
-      Audio Support
+      Audio
     </span>
   </a>
   
@@ -1090,10 +1090,12 @@
 <p>In this way you can use <code>irouter</code> objects like <code>Call</code> and <code>Chat</code> without have to pass an API key.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">irouter</span><span class="w"> </span><span class="kn">import</span> <span class="n">Call</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">c</span> <span class="o">=</span> <span class="n">Call</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;moonshotai/kimi-k2:free&quot;</span><span class="p">)</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">c</span><span class="p">(</span><span class="s2">&quot;How are you?&quot;</span><span class="p">)</span>
 </code></pre></div>
 <p>3b. Alternatively, pass <code>api_key</code> to <code>irouter</code> objects like <code>Call</code> and <code>Chat</code>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">irouter</span><span class="w"> </span><span class="kn">import</span> <span class="n">Call</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">c</span> <span class="o">=</span> <span class="n">Call</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;moonshotai/kimi-k2:free&quot;</span><span class="p">,</span> <span class="n">api_key</span><span class="o">=</span><span class="s2">&quot;your_api_key&quot;</span><span class="p">)</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">c</span><span class="p">(</span><span class="s2">&quot;How are you?&quot;</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="usage">Usage</h2>
 <h3 id="call">Call</h3>
@@ -1106,7 +1108,7 @@
 </code></pre></div>
 <h4 id="multiple-llms">Multiple LLMs</h4>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">irouter</span><span class="w"> </span><span class="kn">import</span> <span class="n">Call</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="n">c</span> <span class="o">=</span> <span class="n">Call</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;moonshotai/kimi-k2:free&quot;</span><span class="p">,</span> <span class="s2">&quot;google/gemini-2.0-flash-exp:free&quot;</span><span class="p">])</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="n">c</span> <span class="o">=</span> <span class="n">Call</span><span class="p">([</span><span class="s2">&quot;moonshotai/kimi-k2:free&quot;</span><span class="p">,</span> <span class="s2">&quot;google/gemini-2.0-flash-exp:free&quot;</span><span class="p">])</span>
 <a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="n">c</span><span class="p">(</span><span class="s2">&quot;Who are you?&quot;</span><span class="p">)</span>
 <a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># {&#39;moonshotai/kimi-k2:free&#39;: &quot;I&#39;m Kimi, your AI friend from Moonshot AI. I&#39;m here to chat, answer your questions, and help you out whenever you need it.&quot;,</span>
 <a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1">#  &#39;google/gemini-2.0-flash-exp:free&#39;: &#39;I am a large language model, trained by Google.\n&#39;}</span>
@@ -1115,14 +1117,14 @@
 <p><code>Chat</code> is an easy way to interface with one or more LLMs, while tracking message history and token usage.</p>
 <h4 id="single-llm_1">Single LLM</h4>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">irouter</span><span class="w"> </span><span class="kn">import</span> <span class="n">Chat</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">c</span> <span class="o">=</span> <span class="n">Chat</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;moonshotai/kimi-k2:free&quot;</span><span class="p">)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">c</span> <span class="o">=</span> <span class="n">Chat</span><span class="p">(</span><span class="s2">&quot;moonshotai/kimi-k2:free&quot;</span><span class="p">)</span>
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="n">c</span><span class="p">(</span><span class="s2">&quot;Who are you?&quot;</span><span class="p">)</span>
 <a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="nb">print</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">history</span><span class="p">)</span> <span class="c1"># {&#39;moonshotai/kimi-k2:free&#39;: [...]}</span>
 <a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nb">print</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">usage</span><span class="p">)</span> <span class="c1"># {&#39;moonshotai/kimi-k2:free&#39;: {&#39;prompt_tokens&#39;: 8, &#39;completion_tokens&#39;: 8, &#39;total_tokens&#39;: 16}}</span>
 </code></pre></div>
 <h4 id="multiple-llms_1">Multiple LLMs</h4>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">irouter</span><span class="w"> </span><span class="kn">import</span> <span class="n">Chat</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="n">c</span> <span class="o">=</span> <span class="n">Chat</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;moonshotai/kimi-k2:free&quot;</span><span class="p">,</span> <span class="s2">&quot;google/gemini-2.0-flash-exp:free&quot;</span><span class="p">])</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="n">c</span> <span class="o">=</span> <span class="n">Chat</span><span class="p">([</span><span class="s2">&quot;moonshotai/kimi-k2:free&quot;</span><span class="p">,</span> <span class="s2">&quot;google/gemini-2.0-flash-exp:free&quot;</span><span class="p">])</span>
 <a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="n">c</span><span class="p">(</span><span class="s2">&quot;Who are you?&quot;</span><span class="p">)</span>
 <a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="nb">print</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">history</span><span class="p">)</span> 
 <a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># {&#39;moonshotai/kimi-k2:free&#39;: [...], </span>
@@ -1158,15 +1160,15 @@
 <a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="c1">#  {&#39;role&#39;: &#39;assistant&#39;, &#39;content&#39;: &#39;The image shows a cute puppy...&#39;}]</span>
 </code></pre></div>
 <p>For more information on <code>Chat</code>, check out the <code>chat.ipynb</code> notebook in the <code>nbs</code> folder.</p>
-<h3 id="pdf-support">PDF Support</h3>
+<h3 id="pdf">PDF</h3>
 <p>Both <code>Call</code> and <code>Chat</code> support PDF processing from URLs or local files.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">irouter</span><span class="w"> </span><span class="kn">import</span> <span class="n">Call</span>
 <a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="n">c</span> <span class="o">=</span> <span class="n">Call</span><span class="p">(</span><span class="s2">&quot;moonshotai/kimi-k2:free&quot;</span><span class="p">)</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="n">pdf_url</span> <span class="o">=</span> <span class="s2">&quot;https://proceedings.neurips.cc/paper_files/paper/2017/file/3f5ee243547dee91fbd053c1c4a845aa-Paper.pdf&quot;</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="n">c</span><span class="p">([</span><span class="n">pdf_url</span><span class="p">,</span> <span class="s2">&quot;What is the main contribution of this paper?&quot;</span><span class="p">])</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="n">c</span><span class="p">([</span><span class="s2">&quot;https://proceedings.neurips.cc/paper_files/paper/2017/file/3f5ee243547dee91fbd053c1c4a845aa-Paper.pdf&quot;</span><span class="p">,</span> 
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>   <span class="s2">&quot;What is the main contribution of this paper?&quot;</span><span class="p">])</span>
 <a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># &#39;The main contribution of this paper is the introduction of the Transformer architecture...&#39;</span>
 </code></pre></div>
-<h3 id="audio-support">Audio Support</h3>
+<h3 id="audio">Audio</h3>
 <p>Some LLMs have native audio support. Simply pass a local filepath that points to a <code>.mp3</code> or <code>.wav</code> file with the instruction as a list of strings.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">irouter</span><span class="w"> </span><span class="kn">import</span> <span class="n">Call</span>
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="n">c</span> <span class="o">=</span> <span class="n">Call</span><span class="p">(</span><span class="s2">&quot;google/gemini-2.5-flash&quot;</span><span class="p">)</span>
