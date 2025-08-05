@@ -1,10 +1,11 @@
 from fastcore.basics import listify
 from .call import Call
 from .base import BASE_URL
+from .tool import function_to_schema, create_tool_results
 
 
 class Chat:
-    """Chat with history and usage tracking."""
+    """Chat with history tracking, usage tracking, and tool support."""
 
     def __init__(
         self,
@@ -36,6 +37,7 @@ class Chat:
     def __call__(
         self,
         message: str | list[str],
+        tools: list = None,
         extra_headers: dict = {},
         extra_body: dict = {},
         **kwargs,
@@ -44,6 +46,7 @@ class Chat:
 
         :param message: User message or list of strings.
         For example, if an image URL or bytes and text are passed, the image will be handled in the LLM call.
+        :param tools: List of functions available for tool calling.
         :param extra_headers: Additional headers
         :param extra_body: Openrouter-only API body parameters.
         For example, to set the free PDF parser plugin: {"plugins": [{"id": "file-parser", "pdf": {"engine": "pdf-text"}}]}.
@@ -54,32 +57,64 @@ class Chat:
         for model in self.models:
             self._history[model].append(user_message)
 
-        resps = [
-            self.call._get_resp(
+        tool_schemas = [function_to_schema(func) for func in tools] if tools else None
+
+        for model in self.models:
+            resp = self.call._get_resp(
                 model,
                 self._history[model],
                 extra_headers,
                 extra_body,
                 raw=True,
+                tools=tool_schemas,
                 **kwargs,
             )
-            for model in self.models
-        ]
 
-        for model, resp in zip(self.models, resps):
             msg = resp.choices[0].message
-            self._history[model].append({"role": "assistant", "content": msg.content})
-            if hasattr(resp, "usage") and resp.usage:
-                usage = resp.usage
-                self._usage[model]["prompt_tokens"] += usage.prompt_tokens
-                self._usage[model]["completion_tokens"] += usage.completion_tokens
-                self._usage[model]["total_tokens"] += usage.total_tokens
+            assistant_msg = {"role": "assistant", "content": msg.content or ""}
+            if msg.tool_calls:
+                assistant_msg["tool_calls"] = msg.tool_calls
+            self._history[model].append(assistant_msg)
 
-        outputs = {
-            model: resp.choices[0].message.content
-            for model, resp in zip(self.models, resps)
-        }
+            if msg.tool_calls and tools:
+                tool_results = create_tool_results(msg.tool_calls, tools)
+                self._history[model].extend(tool_results)
+                final_resp = self.call._get_resp(
+                    model,
+                    self._history[model],
+                    extra_headers,
+                    extra_body,
+                    raw=True,
+                    **kwargs,
+                )
+                final_msg = final_resp.choices[0].message
+                self._history[model].append(
+                    {"role": "assistant", "content": final_msg.content}
+                )
+
+                self.update_token_usage(final_resp, model)
+
+            self.update_token_usage(resp, model)
+
+        outputs = {}
+        for model in self.models:
+            for msg in reversed(self._history[model]):
+                if msg["role"] == "assistant" and msg.get("content"):
+                    outputs[model] = msg["content"]
+                    break
+
         return outputs[self.models[0]] if len(self.models) == 1 else outputs
+
+    def update_token_usage(self, resp, model: str):
+        """Update token usage for a model.
+
+        :param resp: ChatCompletion object
+        """
+        if hasattr(resp, "usage") and resp.usage:
+            usage = resp.usage
+            self._usage[model]["prompt_tokens"] += usage.prompt_tokens
+            self._usage[model]["completion_tokens"] += usage.completion_tokens
+            self._usage[model]["total_tokens"] += usage.total_tokens
 
     @property
     def history(self) -> list[dict] | dict[str, list[dict]]:
@@ -140,4 +175,3 @@ class Chat:
         self.reset_usage()
 
     # TODO: Add streaming
-    # TODO: Add tool usage support

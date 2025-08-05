@@ -7,6 +7,7 @@ def test_single_model_response():
     mock_response = MagicMock()
     mock_response.choices = [MagicMock()]
     mock_response.choices[0].message.content = "Chat response"
+    mock_response.choices[0].message.tool_calls = None
     mock_response.usage = MagicMock()
     mock_response.usage.prompt_tokens = 10
     mock_response.usage.completion_tokens = 5
@@ -49,6 +50,7 @@ def test_multiple_model_response():
     mock_response1 = MagicMock()
     mock_response1.choices = [MagicMock()]
     mock_response1.choices[0].message.content = "Model1 response"
+    mock_response1.choices[0].message.tool_calls = None
     mock_response1.usage = MagicMock()
     mock_response1.usage.prompt_tokens = 10
     mock_response1.usage.completion_tokens = 5
@@ -57,6 +59,7 @@ def test_multiple_model_response():
     mock_response2 = MagicMock()
     mock_response2.choices = [MagicMock()]
     mock_response2.choices[0].message.content = "Model2 response"
+    mock_response2.choices[0].message.tool_calls = None
     mock_response2.usage = MagicMock()
     mock_response2.usage.prompt_tokens = 8
     mock_response2.usage.completion_tokens = 12
@@ -181,6 +184,7 @@ def test_chat_with_extra_body():
     mock_response = MagicMock()
     mock_response.choices = [MagicMock()]
     mock_response.choices[0].message.content = "Chat response"
+    mock_response.choices[0].message.tool_calls = None
     mock_response.usage = MagicMock()
     mock_response.usage.prompt_tokens = 10
     mock_response.usage.completion_tokens = 5
@@ -204,7 +208,12 @@ def test_chat_with_extra_body():
         assert result == "Chat response"
         # Verify _get_resp was called with extra_body
         mock_call._get_resp.assert_called_once_with(
-            "test-model", chat._history["test-model"], {}, extra_body, raw=True
+            "test-model",
+            chat._history["test-model"],
+            {},
+            extra_body,
+            raw=True,
+            tools=None,
         )
 
 
@@ -212,6 +221,7 @@ def test_chat_with_kwargs():
     mock_response = MagicMock()
     mock_response.choices = [MagicMock()]
     mock_response.choices[0].message.content = "Chat response"
+    mock_response.choices[0].message.tool_calls = None
     mock_response.usage = MagicMock()
     mock_response.usage.prompt_tokens = 10
     mock_response.usage.completion_tokens = 5
@@ -236,6 +246,7 @@ def test_chat_with_kwargs():
             {},
             {},
             raw=True,
+            tools=None,
             temperature=0.8,
             max_tokens=150,
             top_p=0.9,
@@ -246,6 +257,7 @@ def test_chat_with_extra_headers():
     mock_response = MagicMock()
     mock_response.choices = [MagicMock()]
     mock_response.choices[0].message.content = "Chat response"
+    mock_response.choices[0].message.tool_calls = None
     mock_response.usage = MagicMock()
     mock_response.usage.prompt_tokens = 10
     mock_response.usage.completion_tokens = 5
@@ -271,6 +283,7 @@ def test_chat_with_extra_headers():
             extra_headers,
             {},
             raw=True,
+            tools=None,
         )
 
 
@@ -278,6 +291,7 @@ def test_chat_with_plugins():
     mock_response = MagicMock()
     mock_response.choices = [MagicMock()]
     mock_response.choices[0].message.content = "Chat response"
+    mock_response.choices[0].message.tool_calls = None
     mock_response.usage = MagicMock()
     mock_response.usage.prompt_tokens = 10
     mock_response.usage.completion_tokens = 5
@@ -303,6 +317,7 @@ def test_chat_with_plugins():
             {},
             {"plugins": plugins},
             raw=True,
+            tools=None,
         )
 
 

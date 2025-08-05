@@ -8,7 +8,7 @@ from .base import BASE_URL, BASE_HEADERS, detect_content_type, encode_base64
 
 
 class Call:
-    """One-off API calls without history and usage tracking."""
+    """One-off API calls without history tracking, usage tracking, or tool support."""
 
     def __init__(
         self,

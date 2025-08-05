@@ -44,9 +44,9 @@ c("How are you?")
 
 ### Call
 
-`Call` is the simplest interface to have one-off interactions with one or more LLMs. 
+`Call` is the simplest interface to have one-off interactions with one or more LLMs (without tool support).
 
-For conversational interactions use `Chat`, which tracks message history and token usage.
+For conversational interactions use `Chat`, which tracks message history, token usage, and supports tool calling.
 
 #### Single LLM
 ```python
@@ -67,7 +67,7 @@ c("Who are you?")
 
 ### Chat
 
-`Chat` is an easy way to interface with one or more LLMs, while tracking message history and token usage.
+`Chat` is an easy way to interface with one or more LLMs, while tracking message history, token usage, and supporting tool calling.
 
 #### Single LLM
 
