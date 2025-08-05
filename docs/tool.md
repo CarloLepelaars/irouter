@@ -15,7 +15,8 @@ def get_time(fmt="%Y-%m-%d %H:%M:%S", tz=None):
     :param tz: Optional timezone name (e.g., "UTC"). If given, uses that timezone.
     :returns: The formatted current time.
     """
-    return datetime.now(ZoneInfo(tz)) if tz else datetime.now().strftime(fmt)
+    dt = datetime.now(ZoneInfo(tz)) if tz else datetime.now()
+    return dt.strftime(fmt)
 
 chat = Chat("gpt-4o-mini")
 result = chat("What is the current time in New York City?", tools=[get_time])

@@ -42,6 +42,8 @@ c("How are you?")
 
 ## Usage
 
+Below are basic usage examples of functionality in `irouter`. For more detailed examples, check out the `nbs` folder.
+
 ### Call
 
 `Call` is the simplest interface to have one-off interactions with one or more LLMs (without tool support).
