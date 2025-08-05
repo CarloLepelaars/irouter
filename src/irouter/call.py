@@ -33,8 +33,6 @@ class Call:
         )
 
     # TODO: Add Streaming support.
-    # TODO: Add support for tool usage.
-    # TODO: Exception handling.
     def __call__(
         self,
         message: str | list[str] | list[dict],

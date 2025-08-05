@@ -213,3 +213,5 @@ CLAUDE.md
 # UV ignore
 .python-version
 uv.lock
+
+test_nb.ipynb
