@@ -50,6 +50,7 @@ nav:
   - PDF: pdf.md
   - Audio: audio.md
   - Multimodal: multimodal.md
+  - Tool: tool.md
   - Contributing: contributing.md
   - Disclaimer: disclaimer.md
   - llms.txt: llms.txt
