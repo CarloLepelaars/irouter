@@ -177,7 +177,7 @@ def test_chat_construct_user_message_integration():
         chat("test message")
 
         # Verify construct_user_message was called with the input
-        mock_call.construct_user_message.assert_called_once_with("test message")
+        mock_call.construct_user_message.assert_called_once_with(message="test message")
 
 
 def test_chat_with_extra_body():
@@ -213,7 +213,6 @@ def test_chat_with_extra_body():
             extra_headers={},
             extra_body=extra_body,
             raw=True,
-            tools=None,
         )
 
 
@@ -246,7 +245,6 @@ def test_chat_with_kwargs():
             extra_headers={},
             extra_body={},
             raw=True,
-            tools=None,
             temperature=0.8,
             max_tokens=150,
             top_p=0.9,
@@ -283,7 +281,6 @@ def test_chat_with_extra_headers():
             extra_headers=extra_headers,
             extra_body={},
             raw=True,
-            tools=None,
         )
 
 
@@ -317,7 +314,6 @@ def test_chat_with_plugins():
             extra_headers={},
             extra_body={"plugins": plugins},
             raw=True,
-            tools=None,
         )
 
 
@@ -422,3 +418,266 @@ def test_chat_with_pdf():
         assert chat.usage["prompt_tokens"] == 20
         assert chat.usage["completion_tokens"] == 15
         assert chat.usage["total_tokens"] == 35
+
+
+def test_toolloop_single_step():
+    """Test toolloop with tools that complete in one step"""
+
+    def dummy_tool(x: int) -> int:
+        """Add 1 to x"""
+        return x + 1
+
+    # Mock responses - first with tool call, second without
+    mock_response1 = MagicMock()
+    mock_response1.choices = [MagicMock()]
+    mock_response1.choices[0].message.content = ""
+    mock_tool_call = MagicMock()
+    mock_tool_call.id = "call_1"
+    mock_tool_call.type = "function"
+    mock_tool_call.function.name = "dummy_tool"
+    mock_tool_call.function.arguments = '{"x": 5}'
+    mock_response1.choices[0].message.tool_calls = [mock_tool_call]
+    mock_response1.usage = MagicMock()
+    mock_response1.usage.prompt_tokens = 10
+    mock_response1.usage.completion_tokens = 5
+    mock_response1.usage.total_tokens = 15
+
+    mock_response2 = MagicMock()
+    mock_response2.choices = [MagicMock()]
+    mock_response2.choices[0].message.content = "The result is 6"
+    mock_response2.choices[0].message.tool_calls = None
+    mock_response2.usage = MagicMock()
+    mock_response2.usage.prompt_tokens = 15
+    mock_response2.usage.completion_tokens = 8
+    mock_response2.usage.total_tokens = 23
+
+    with patch("irouter.chat.Call") as mock_call_class:
+        mock_call = MagicMock()
+        # Need 2 responses: first call with tool_calls, final call without tool_calls
+        mock_call._get_resp = Mock(side_effect=[mock_response1, mock_response2])
+        mock_call.construct_user_message = Mock(
+            return_value={"role": "user", "content": "Add 1 to 5"}
+        )
+        mock_call_class.return_value = mock_call
+
+        chat = Chat("test-model")
+        responses = list(chat.toolloop("Add 1 to 5", tools=[dummy_tool]))
+
+        assert len(responses) == 2
+        assert responses[0] == mock_response1  # First response with tool call
+        assert responses[1] == mock_response2  # Final response
+
+        # Check history includes tool results
+        history = chat.history
+        assert len(history) >= 5  # system, user, assistant, tool_result, assistant
+        assert history[-1]["content"] == "The result is 6"
+
+
+def test_toolloop_multiple_steps():
+    """Test toolloop with multiple rounds of tool calls"""
+
+    def dummy_tool(x: int) -> int:
+        """Add 1 to x"""
+        return x + 1
+
+    # Mock responses - multiple tool calls
+    mock_response1 = MagicMock()
+    mock_response1.choices = [MagicMock()]
+    mock_response1.choices[0].message.content = ""
+    mock_tool_call1 = MagicMock()
+    mock_tool_call1.id = "call_1"
+    mock_tool_call1.type = "function"
+    mock_tool_call1.function.name = "dummy_tool"
+    mock_tool_call1.function.arguments = '{"x": 5}'
+    mock_response1.choices[0].message.tool_calls = [mock_tool_call1]
+    mock_response1.usage = MagicMock()
+    mock_response1.usage.prompt_tokens = 10
+    mock_response1.usage.completion_tokens = 5
+    mock_response1.usage.total_tokens = 15
+
+    mock_response2 = MagicMock()
+    mock_response2.choices = [MagicMock()]
+    mock_response2.choices[0].message.content = ""
+    mock_tool_call2 = MagicMock()
+    mock_tool_call2.id = "call_2"
+    mock_tool_call2.type = "function"
+    mock_tool_call2.function.name = "dummy_tool"
+    mock_tool_call2.function.arguments = '{"x": 6}'
+    mock_response2.choices[0].message.tool_calls = [mock_tool_call2]
+    mock_response2.usage = MagicMock()
+    mock_response2.usage.prompt_tokens = 15
+    mock_response2.usage.completion_tokens = 8
+    mock_response2.usage.total_tokens = 23
+
+    mock_response3 = MagicMock()
+    mock_response3.choices = [MagicMock()]
+    mock_response3.choices[0].message.content = "Final result is 7"
+    mock_response3.choices[0].message.tool_calls = None
+    mock_response3.usage = MagicMock()
+    mock_response3.usage.prompt_tokens = 20
+    mock_response3.usage.completion_tokens = 10
+    mock_response3.usage.total_tokens = 30
+
+    with patch("irouter.chat.Call") as mock_call_class:
+        mock_call = MagicMock()
+        # Need 3 responses: first call with tool_calls, second call with tool_calls, final call without tool_calls
+        mock_call._get_resp = Mock(
+            side_effect=[mock_response1, mock_response2, mock_response3]
+        )
+        mock_call.construct_user_message = Mock(
+            return_value={"role": "user", "content": "Add 1 twice to 5"}
+        )
+        mock_call_class.return_value = mock_call
+
+        chat = Chat("test-model")
+        responses = list(chat.toolloop("Add 1 twice to 5", tools=[dummy_tool]))
+
+        assert len(responses) == 3
+        assert responses[0] == mock_response1
+        assert responses[1] == mock_response2
+        assert responses[2] == mock_response3
+
+        # Verify final message
+        history = chat.history
+        assert history[-1]["content"] == "Final result is 7"
+
+
+def test_toolloop_max_steps():
+    """Test toolloop respects max_steps limit"""
+
+    def dummy_tool(x: int) -> int:
+        """Add 1 to x"""
+        return x + 1
+
+    # Mock response that always has tool calls
+    def create_mock_response():
+        mock_response = MagicMock()
+        mock_response.choices = [MagicMock()]
+        mock_response.choices[0].message.content = ""
+        mock_tool_call = MagicMock()
+        mock_tool_call.id = "call_1"
+        mock_tool_call.type = "function"
+        mock_tool_call.function.name = "dummy_tool"
+        mock_tool_call.function.arguments = '{"x": 5}'
+        mock_response.choices[0].message.tool_calls = [mock_tool_call]
+        mock_response.usage = MagicMock()
+        mock_response.usage.prompt_tokens = 10
+        mock_response.usage.completion_tokens = 5
+        mock_response.usage.total_tokens = 15
+        return mock_response
+
+    with patch("irouter.chat.Call") as mock_call_class:
+        mock_call = MagicMock()
+        mock_call._get_resp = Mock(
+            side_effect=[create_mock_response() for _ in range(10)]
+        )
+        mock_call.construct_user_message = Mock(
+            return_value={"role": "user", "content": "Keep adding"}
+        )
+        mock_call_class.return_value = mock_call
+
+        chat = Chat("test-model")
+        responses = list(chat.toolloop("Keep adding", tools=[dummy_tool], max_steps=3))
+
+        # Should stop at max_steps, not continue infinitely
+        assert len(responses) == 3
+
+
+def test_toolloop_no_tools():
+    """Test toolloop without tools behaves like regular chat"""
+    mock_response = MagicMock()
+    mock_response.choices = [MagicMock()]
+    mock_response.choices[0].message.content = "Simple response"
+    mock_response.choices[0].message.tool_calls = None
+    mock_response.usage = MagicMock()
+    mock_response.usage.prompt_tokens = 10
+    mock_response.usage.completion_tokens = 5
+    mock_response.usage.total_tokens = 15
+
+    with patch("irouter.chat.Call") as mock_call_class:
+        mock_call = MagicMock()
+        mock_call._get_resp = Mock(return_value=mock_response)
+        mock_call.construct_user_message = Mock(
+            return_value={"role": "user", "content": "Hello"}
+        )
+        mock_call_class.return_value = mock_call
+
+        chat = Chat("test-model")
+        responses = list(chat.toolloop("Hello"))
+
+        assert len(responses) == 1
+        assert responses[0] == mock_response
+
+        # Should have normal chat history
+        history = chat.history
+        assert len(history) == 3  # system, user, assistant
+        assert history[-1]["content"] == "Simple response"
+
+
+def test_call_with_multiround_tools():
+    """Test that __call__ now handles multi-round tool calls automatically"""
+
+    def dummy_tool(x: int) -> int:
+        """Add 1 to x"""
+        return x + 1
+
+    # Mock responses - multiple tool calls that should be handled by __call__
+    mock_response1 = MagicMock()
+    mock_response1.choices = [MagicMock()]
+    mock_response1.choices[0].message.content = ""
+    mock_tool_call1 = MagicMock()
+    mock_tool_call1.id = "call_1"
+    mock_tool_call1.type = "function"
+    mock_tool_call1.function.name = "dummy_tool"
+    mock_tool_call1.function.arguments = '{"x": 5}'
+    mock_response1.choices[0].message.tool_calls = [mock_tool_call1]
+    mock_response1.usage = MagicMock()
+    mock_response1.usage.prompt_tokens = 10
+    mock_response1.usage.completion_tokens = 5
+    mock_response1.usage.total_tokens = 15
+
+    mock_response2 = MagicMock()
+    mock_response2.choices = [MagicMock()]
+    mock_response2.choices[0].message.content = ""
+    mock_tool_call2 = MagicMock()
+    mock_tool_call2.id = "call_2"
+    mock_tool_call2.type = "function"
+    mock_tool_call2.function.name = "dummy_tool"
+    mock_tool_call2.function.arguments = '{"x": 6}'
+    mock_response2.choices[0].message.tool_calls = [mock_tool_call2]
+    mock_response2.usage = MagicMock()
+    mock_response2.usage.prompt_tokens = 15
+    mock_response2.usage.completion_tokens = 8
+    mock_response2.usage.total_tokens = 23
+
+    mock_response3 = MagicMock()
+    mock_response3.choices = [MagicMock()]
+    mock_response3.choices[0].message.content = "Final result is 7"
+    mock_response3.choices[0].message.tool_calls = None
+    mock_response3.usage = MagicMock()
+    mock_response3.usage.prompt_tokens = 20
+    mock_response3.usage.completion_tokens = 10
+    mock_response3.usage.total_tokens = 30
+
+    with patch("irouter.chat.Call") as mock_call_class:
+        mock_call = MagicMock()
+        # Need 3 responses: first call with tool_calls, second call with tool_calls, final call without tool_calls
+        mock_call._get_resp = Mock(
+            side_effect=[mock_response1, mock_response2, mock_response3]
+        )
+        mock_call.construct_user_message = Mock(
+            return_value={"role": "user", "content": "Add 1 twice to 5"}
+        )
+        mock_call_class.return_value = mock_call
+
+        chat = Chat("test-model")
+        # This should now handle multiple tool rounds automatically
+        result = chat("Add 1 twice to 5", tools=[dummy_tool])
+
+        assert result == "Final result is 7"
+
+        # Verify the history shows multiple tool executions
+        history = chat.history
+        # Should have: system, user, assistant (tool call), tool result, assistant (tool call), tool result, assistant (final)
+        assert len(history) >= 7
+        assert history[-1]["content"] == "Final result is 7"

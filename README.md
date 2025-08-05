@@ -166,7 +166,7 @@ c(["../assets/bottles.mp3", "../assets/puppy.jpg", "What do you hear and see?"])
 
 ### Tool Usage
 
-`Chat` supports tool calling, allowing LLMs to execute functions you provide. Simply pass a list of functions as the `tools` parameter. 
+`Chat` supports (multi-turn) tool calling, allowing LLMs to execute functions you provide. Simply pass a list of functions as the `tools` parameter. 
 
 To ensure the best tool usage experience, use the reStructuredText convention for function docstrings with `:param` tags, like the function below.
 
