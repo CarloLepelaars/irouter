@@ -581,6 +581,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#tool-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tool Usage
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#misc" class="md-nav__link">
     <span class="md-ellipsis">
       Misc
@@ -1003,6 +1012,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#tool-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tool Usage
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#misc" class="md-nav__link">
     <span class="md-ellipsis">
       Misc
@@ -1183,18 +1201,37 @@
 <a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="n">c</span><span class="p">([</span><span class="s2">&quot;../assets/bottles.mp3&quot;</span><span class="p">,</span> <span class="s2">&quot;../assets/puppy.jpg&quot;</span><span class="p">,</span> <span class="s2">&quot;What do you hear and see?&quot;</span><span class="p">])</span>
 <a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># &#39;I hear sounds of glass and see a small, fluffy dog...&#39;</span>
 </code></pre></div>
+<h3 id="tool-usage">Tool Usage</h3>
+<p><code>Chat</code> supports tool calling, allowing LLMs to execute functions you provide. Simply pass a list of functions as the <code>tools</code> parameter. </p>
+<p>To ensure the best tool usage experience, use the reStructuredText convention for function docstrings with <code>:param</code> tags, like the function below.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">zoneinfo</span><span class="w"> </span><span class="kn">import</span> <span class="n">ZoneInfo</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_time</span><span class="p">(</span><span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">,</span> <span class="n">tz</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the current time formatted as a string.</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="sd">    :param fmt: Format string for strftime.</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="sd">    :param tz: Optional timezone name (e.g., &quot;UTC&quot;). If given, uses that timezone.</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="sd">    :returns: The formatted current time.</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>    <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">ZoneInfo</span><span class="p">(</span><span class="n">tz</span><span class="p">))</span> <span class="k">if</span> <span class="n">tz</span> <span class="k">else</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">fmt</span><span class="p">)</span>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="n">chat</span> <span class="o">=</span> <span class="n">Chat</span><span class="p">(</span><span class="s2">&quot;gpt-4o-mini&quot;</span><span class="p">)</span>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="n">result</span> <span class="o">=</span> <span class="n">chat</span><span class="p">(</span><span class="s2">&quot;What is the current time in New York City?&quot;</span><span class="p">,</span> <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">get_time</span><span class="p">])</span>
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="c1"># &quot;&#39;The current time in New York City is 7:45 AM on August 5, 2025.\n&#39;&quot;</span>
+</code></pre></div>
 <h3 id="misc">Misc</h3>
 <h4 id="get_all_models"><code>get_all_models</code></h4>
 <p>You can easily get an overview of all 300+ models available using <code>get_all_models</code>.</p>
 <p>Alternatively, browse <a href="https://openrouter.ai/models">OpenRouter's models page</a> to view supported models on <code>irouter</code>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">irouter.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_all_models</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="n">get_all_models</span><span class="p">()</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="c1"># [&#39;llm_provider1/model1&#39;, ... &#39;llm_providerx/modelx&#39;]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">irouter.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_all_models</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="n">get_all_models</span><span class="p">()</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="c1"># [&#39;llm_provider1/model1&#39;, ... &#39;llm_providerx/modelx&#39;]</span>
 </code></pre></div>
 <h4 id="history_to_markdown"><code>history_to_markdown</code></h4>
 <p>Convert chat history to markdown for display in Jupyter notebooks.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">irouter.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">history_to_markdown</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="n">history_to_markdown</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">history</span><span class="p">,</span> <span class="n">ipython</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">irouter.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">history_to_markdown</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="n">history_to_markdown</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">history</span><span class="p">,</span> <span class="n">ipython</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="credits">Credits</h2>
 <p>This project is built on top of the <a href="https://openrouter.ai">OpenRouter</a> API infrastructure, which provides access to LLMs through a unified interface.</p>
