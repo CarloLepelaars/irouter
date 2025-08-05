@@ -1099,8 +1099,8 @@
 </code></pre></div>
 <h2 id="usage">Usage</h2>
 <h3 id="call">Call</h3>
-<p><code>Call</code> is the simplest interface to have one-off interactions with one or more LLMs. </p>
-<p>For conversational interactions use <code>Chat</code>, which tracks message history and token usage.</p>
+<p><code>Call</code> is the simplest interface to have one-off interactions with one or more LLMs (without tool support).</p>
+<p>For conversational interactions use <code>Chat</code>, which tracks message history, token usage, and supports tool calling.</p>
 <h4 id="single-llm">Single LLM</h4>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">irouter</span><span class="w"> </span><span class="kn">import</span> <span class="n">Call</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">c</span> <span class="o">=</span> <span class="n">Call</span><span class="p">(</span><span class="s2">&quot;moonshotai/kimi-k2:free&quot;</span><span class="p">)</span>
@@ -1115,7 +1115,7 @@
 <a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1">#  &#39;google/gemini-2.0-flash-exp:free&#39;: &#39;I am a large language model, trained by Google.\n&#39;}</span>
 </code></pre></div>
 <h3 id="chat">Chat</h3>
-<p><code>Chat</code> is an easy way to interface with one or more LLMs, while tracking message history and token usage.</p>
+<p><code>Chat</code> is an easy way to interface with one or more LLMs, while tracking message history, token usage, and supporting tool calling.</p>
 <h4 id="single-llm_1">Single LLM</h4>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">irouter</span><span class="w"> </span><span class="kn">import</span> <span class="n">Chat</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">c</span> <span class="o">=</span> <span class="n">Chat</span><span class="p">(</span><span class="s2">&quot;moonshotai/kimi-k2:free&quot;</span><span class="p">)</span>
