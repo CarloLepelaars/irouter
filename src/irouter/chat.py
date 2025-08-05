@@ -61,10 +61,10 @@ class Chat:
 
         for model in self.models:
             resp = self.call._get_resp(
-                model,
-                self._history[model],
-                extra_headers,
-                extra_body,
+                model=model,
+                messages=self._history[model],
+                extra_headers=extra_headers,
+                extra_body=extra_body,
                 raw=True,
                 tools=tool_schemas,
                 **kwargs,
@@ -80,10 +80,10 @@ class Chat:
                 tool_results = create_tool_results(msg.tool_calls, tools)
                 self._history[model].extend(tool_results)
                 final_resp = self.call._get_resp(
-                    model,
-                    self._history[model],
-                    extra_headers,
-                    extra_body,
+                    model=model,
+                    messages=self._history[model],
+                    extra_headers=extra_headers,
+                    extra_body=extra_body,
                     raw=True,
                     **kwargs,
                 )

@@ -208,10 +208,10 @@ def test_chat_with_extra_body():
         assert result == "Chat response"
         # Verify _get_resp was called with extra_body
         mock_call._get_resp.assert_called_once_with(
-            "test-model",
-            chat._history["test-model"],
-            {},
-            extra_body,
+            model="test-model",
+            messages=chat._history["test-model"],
+            extra_headers={},
+            extra_body=extra_body,
             raw=True,
             tools=None,
         )
@@ -241,10 +241,10 @@ def test_chat_with_kwargs():
         assert result == "Chat response"
         # Verify _get_resp was called with kwargs
         mock_call._get_resp.assert_called_once_with(
-            "test-model",
-            chat._history["test-model"],
-            {},
-            {},
+            model="test-model",
+            messages=chat._history["test-model"],
+            extra_headers={},
+            extra_body={},
             raw=True,
             tools=None,
             temperature=0.8,
@@ -278,10 +278,10 @@ def test_chat_with_extra_headers():
         assert result == "Chat response"
         # Verify _get_resp was called with extra_headers
         mock_call._get_resp.assert_called_once_with(
-            "test-model",
-            chat._history["test-model"],
-            extra_headers,
-            {},
+            model="test-model",
+            messages=chat._history["test-model"],
+            extra_headers=extra_headers,
+            extra_body={},
             raw=True,
             tools=None,
         )
@@ -312,10 +312,10 @@ def test_chat_with_plugins():
         assert result == "Chat response"
         # Verify _get_resp was called with plugins in extra_body
         mock_call._get_resp.assert_called_once_with(
-            "test-model",
-            chat._history["test-model"],
-            {},
-            {"plugins": plugins},
+            model="test-model",
+            messages=chat._history["test-model"],
+            extra_headers={},
+            extra_body={"plugins": plugins},
             raw=True,
             tools=None,
         )
