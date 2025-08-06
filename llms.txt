@@ -1,41 +1,92 @@
 # irouter
 
-> irouter is a Python (3.10+) library that provides easy access to 100+ LLMs through OpenRouter's API. It simplifies LLM interactions to just 2 lines of code while supporting both single and multiple model calls.
+> irouter is a Python (3.10+) library that provides easy access to 100+ LLMs through OpenRouter's API. It simplifies LLM interactions to just 2 lines of code while supporting both single and multiple model calls, tool calling, and multimodal inputs (images, PDFs, audio).
 
-Things to remember when using irouter:
+## Key Things to Remember
 - You must set the `OPENROUTER_API_KEY` environment variable or pass `api_key` directly to objects such as `Call` and `Chat`.
 - irouter supports 300+ models via OpenRouter including OpenAI, Anthropic, Google, and more.
-- You can pass custom OpenAI client configurations for advanced usage.
-- Use `Call()` for simple one-off LLM interactions.
-- Use `Chat()` for conversational interfaces with message history and token tracking.
-- Supports both single model calls and multi-model parallel calls.
+- Use `Call()` for simple one-off LLM interactions without state tracking.
+- Use `Chat()` for conversational interfaces with message history, token tracking, and tool support.
+- Supports both single model calls and multi-model LLM calls.
 - Built on top of the `openai.OpenAI` Python client.
+- When specifying functions for tool calling, use reStructuredText docstrings with `:param` tags and type hints for best results. Just pass a list of functions as the `tools` parameter to enable tool loops.
 
-## Setup
+## Installation
 ```bash
 pip install irouter
 export OPENROUTER_API_KEY=your_api_key
 ```
 
 ## Core Components
-- `get_all_models()`: View all 300+ available models.
+- `get_all_models()`: View all 300+ available models
 - `Call`: Simple interface for one-off LLM calls (single or multiple models)
-- `Chat`: Conversational interface with message history and usage tracking
+- `Chat`: Conversational interface with message history, usage tracking, and tool calling support
 
 ## Basic Usage
+
+### Simple Calls
 ```python
 from irouter import Call, Chat
 
 # Single model call
-c = Call(model="moonshotai/kimi-k2:free")
+c = Call("moonshotai/kimi-k2:free")
 c("Who are you?")
 
 # Multiple models
-c = Call(model=["moonshotai/kimi-k2:free", "google/gemini-2.0-flash-exp:free"])
-c("Who are you?")
-
-# Chat with history
-chat = Chat(model="moonshotai/kimi-k2:free")
-chat("Hello!")
-print(chat.history, chat.usage)
+c = Call(["moonshotai/kimi-k2:free", "google/gemini-2.0-flash-exp:free"])
+c("Who are you?")  # Returns dict with model -> response mapping
 ```
+
+### Chat with History
+```python
+# Chat with history tracking
+chat = Chat("moonshotai/kimi-k2:free")
+chat("Hello!")
+print(chat.history)  # See conversation history
+print(chat.usage)    # See token usage
+```
+
+### Multimodal Inputs
+```python
+# Images, PDFs, Audio - just pass as list of strings. Mix and match based on your needs.
+chat = Chat("gpt-4o-mini")
+chat(["path/to/image.jpg", "What's in this image?"])
+chat(["path/to/document.pdf", "Summarize this document"])
+chat(["path/to/audio.mp3", "What do you hear?"])
+
+# Mix multiple modalities
+chat(["image.jpg", "document.pdf", "audio.mp3", "Analyze all inputs."])
+```
+
+### Tool Calling
+```python
+def get_weather(city: str) -> str:
+    """Get current weather for a city.
+    
+    :param city: City name
+    :returns: Weather description
+    """
+    return f"Weather in {city}: sunny, 22°C"
+
+chat = Chat("gpt-4o-mini")
+result = chat("What's the weather in Paris?", tools=[get_weather])
+# LLM will automatically call the function and use results
+```
+
+### Advanced Usage
+```python
+# Custom system prompts
+chat = Chat("gpt-4o-mini", system="You are a helpful coding assistant.")
+
+# OpenRouter-specific parameters  
+chat("Hello", extra_body={"provider": {"require_parameters": True}})
+
+# API parameters
+chat("Write a story", temperature=0.8, max_tokens=500)
+
+# Different base URL
+chat = Chat("gpt-4o-mini", base_url="https://api.openai.com/v1", api_key="your_openai_api_key")
+
+```
+
+The library handles all the complexity of API calls, message formatting, and response processing, letting you focus on application logic.

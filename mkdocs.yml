@@ -43,7 +43,6 @@ markdown_extensions:
 
 nav:
   - Home: index.md
-  - Base: base.md
   - Call: call.md
   - Chat: chat.md
   - Image: img.md
@@ -51,6 +50,7 @@ nav:
   - Audio: audio.md
   - Multimodal: multimodal.md
   - Tool: tool.md
+  - Base: base.md
   - Contributing: contributing.md
   - Disclaimer: disclaimer.md
   - llms.txt: llms.txt

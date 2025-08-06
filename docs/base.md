@@ -46,14 +46,22 @@ history_to_markdown(chat.history, ipython=True)
 ## detect_content_type
 
 Detect what content is passed. The possible values are:
+
 1. "text" if the item is a non-string or doesn't belong to any of the other categories.
+
 Images:
+
 2. "image_url" if item is a URL and ends with a supported image extension.
+
 3. "local_image" if item is a local file path and ends with a supported image extension.
+
 PDFs:
 4. "pdf_url" if item is a URL and ends with a PDF extension.
+
 5. "local_pdf" if item is a local file path and ends with a PDF extension.
+
 Audio:
+
 6. "audio" if item is a local file path and ends with a supported audio extension.
 
 ```python
