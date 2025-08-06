@@ -221,4 +221,4 @@ This project is built on top of the [OpenRouter](https://openrouter.ai) API infr
 
 This project is inspired by [Answer.AI's](https://www.answer.ai) projects like [cosette](https://github.com/AnswerDotAI/cosette) and [claudette](https://github.com/AnswerDotAI/claudette).
 
-`irouter` generalizes this idea to support 100s of LLMs, which includes OpenAI, Anthropic and more. This is possible thanks to [OpenRouter's](https://openrouter.ai) infrastructure.
+`irouter` generalizes this idea to support 100s of LLMs, which includes OpenAI, Anthropic and more. `irouter` also provides additional modalities and functionality to work with. This is possible thanks to [OpenRouter's](https://openrouter.ai) infrastructure.
