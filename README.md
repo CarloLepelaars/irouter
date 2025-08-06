@@ -24,7 +24,7 @@ pip install irouter
 export OPENROUTER_API_KEY=your_openrouter_api_key
 ```
 
-In this way you can use `irouter` objects like `Call` and `Chat` without have to pass an API key.
+In this way you can use `irouter` objects like `Call` and `Chat` without having to pass an API key.
 
 ```python
 from irouter import Call
