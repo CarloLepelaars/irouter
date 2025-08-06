@@ -166,15 +166,19 @@ c(["../assets/bottles.mp3", "../assets/puppy.jpg", "What do you hear and see?"])
 
 ### Tool Usage
 
-`Chat` supports (multi-turn) tool calling, allowing LLMs to execute functions you provide. Simply pass a list of functions as the `tools` parameter. 
+`Chat` supports (multi-turn) tool calling, allowing LLMs to execute functions you provide. Simply pass a list of functions as the `tools` parameter. `irouter` will take care of the rest.
 
-To ensure the best tool usage experience, use the reStructuredText convention for function docstrings with `:param` tags, like the function below.
+To ensure the best tool usage experience:
+
+- Use the [reStructuredText](https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html) convention for function docstrings with `:param` tags, like the function below. In that case the tool schema will specifically include descriptions for each parameter.
+
+- Consider using type hints so the LLM knows what types to provide.
 
 ```python
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
-def get_time(fmt="%Y-%m-%d %H:%M:%S", tz=None):
+def get_time(fmt: str="%Y-%m-%d %H:%M:%S", tz: str=None) -> str:
     """Returns the current time formatted as a string.
 
     :param fmt: Format string for strftime.
