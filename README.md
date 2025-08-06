@@ -21,7 +21,7 @@ pip install irouter
 3a. (recommended!) Set the OpenRouter API key as an environment variable:
 
 ```bash
-export OPENROUTER_API_KEY=your_api_key
+export OPENROUTER_API_KEY=your_openrouter_api_key
 ```
 
 In this way you can use `irouter` objects like `Call` and `Chat` without have to pass an API key.
@@ -36,7 +36,7 @@ c("How are you?")
 
 ```python
 from irouter import Call
-c = Call("moonshotai/kimi-k2:free", api_key="your_api_key")
+c = Call("moonshotai/kimi-k2:free", api_key="your_openrouter_api_key")
 c("How are you?")
 ```
 
