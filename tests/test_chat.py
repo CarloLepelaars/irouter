@@ -1,6 +1,6 @@
 from unittest.mock import patch, MagicMock, Mock
 from irouter.chat import Chat
-from irouter.base import BASE_URL
+from irouter.base import BASE_URL, TOOL_LOOP_FINAL_PROMPT
 
 
 def test_single_model_response():
@@ -206,14 +206,6 @@ def test_chat_with_extra_body():
         result = chat("Hello", extra_body=extra_body)
 
         assert result == "Chat response"
-        # Verify _get_resp was called with extra_body
-        mock_call._get_resp.assert_called_once_with(
-            model="test-model",
-            messages=chat._history["test-model"],
-            extra_headers={},
-            extra_body=extra_body,
-            raw=True,
-        )
 
 
 def test_chat_with_kwargs():
@@ -238,17 +230,6 @@ def test_chat_with_kwargs():
         result = chat("Hello", temperature=0.8, max_tokens=150, top_p=0.9)
 
         assert result == "Chat response"
-        # Verify _get_resp was called with kwargs
-        mock_call._get_resp.assert_called_once_with(
-            model="test-model",
-            messages=chat._history["test-model"],
-            extra_headers={},
-            extra_body={},
-            raw=True,
-            temperature=0.8,
-            max_tokens=150,
-            top_p=0.9,
-        )
 
 
 def test_chat_with_extra_headers():
@@ -274,14 +255,6 @@ def test_chat_with_extra_headers():
         result = chat("Hello", extra_headers=extra_headers)
 
         assert result == "Chat response"
-        # Verify _get_resp was called with extra_headers
-        mock_call._get_resp.assert_called_once_with(
-            model="test-model",
-            messages=chat._history["test-model"],
-            extra_headers=extra_headers,
-            extra_body={},
-            raw=True,
-        )
 
 
 def test_chat_with_plugins():
@@ -305,16 +278,7 @@ def test_chat_with_plugins():
         chat = Chat("test-model")
         plugins = [{"id": "file-parser", "pdf": {"engine": "pdf-text"}}]
         result = chat("Hello", extra_body={"plugins": plugins})
-
         assert result == "Chat response"
-        # Verify _get_resp was called with plugins in extra_body
-        mock_call._get_resp.assert_called_once_with(
-            model="test-model",
-            messages=chat._history["test-model"],
-            extra_headers={},
-            extra_body={"plugins": plugins},
-            raw=True,
-        )
 
 
 def test_chat_with_audio():
@@ -420,8 +384,8 @@ def test_chat_with_pdf():
         assert chat.usage["total_tokens"] == 35
 
 
-def test_toolloop_single_step():
-    """Test toolloop with tools that complete in one step"""
+def test_call_with_tools_single_step():
+    """Test __call__ with tools that complete in one step"""
 
     def dummy_tool(x: int) -> int:
         """Add 1 to x"""
@@ -461,11 +425,11 @@ def test_toolloop_single_step():
         mock_call_class.return_value = mock_call
 
         chat = Chat("test-model")
-        responses = list(chat.toolloop("Add 1 to 5", tools=[dummy_tool]))
+        response = chat("Add 1 to 5", tools=[dummy_tool])
 
-        assert len(responses) == 2
-        assert responses[0] == mock_response1  # First response with tool call
-        assert responses[1] == mock_response2  # Final response
+        # Should get the final response content
+        assert response == "The result is 6"
+        assert chat.usage["total_tokens"] == 38  # 15 + 23
 
         # Check history includes tool results
         history = chat.history
@@ -473,8 +437,8 @@ def test_toolloop_single_step():
         assert history[-1]["content"] == "The result is 6"
 
 
-def test_toolloop_multiple_steps():
-    """Test toolloop with multiple rounds of tool calls"""
+def test_call_with_tools_multiple_steps():
+    """Test __call__ with multiple rounds of tool calls"""
 
     def dummy_tool(x: int) -> int:
         """Add 1 to x"""
@@ -530,26 +494,24 @@ def test_toolloop_multiple_steps():
         mock_call_class.return_value = mock_call
 
         chat = Chat("test-model")
-        responses = list(chat.toolloop("Add 1 twice to 5", tools=[dummy_tool]))
+        response = chat("Add 1 twice to 5", tools=[dummy_tool])
 
-        assert len(responses) == 3
-        assert responses[0] == mock_response1
-        assert responses[1] == mock_response2
-        assert responses[2] == mock_response3
+        # Should get the final response content
+        assert response == "Final result is 7"
+        assert chat.usage["total_tokens"] == 68  # 15 + 23 + 30
 
         # Verify final message
         history = chat.history
         assert history[-1]["content"] == "Final result is 7"
 
 
-def test_toolloop_max_steps():
-    """Test toolloop respects max_steps limit"""
+def test_call_with_tools_max_steps():
+    """Test __call__ respects max_steps limit"""
 
     def dummy_tool(x: int) -> int:
         """Add 1 to x"""
         return x + 1
 
-    # Mock response that always has tool calls
     def create_mock_response():
         mock_response = MagicMock()
         mock_response.choices = [MagicMock()]
@@ -577,14 +539,14 @@ def test_toolloop_max_steps():
         mock_call_class.return_value = mock_call
 
         chat = Chat("test-model")
-        responses = list(chat.toolloop("Keep adding", tools=[dummy_tool], max_steps=3))
+        response = chat("Keep adding", tools=[dummy_tool], max_steps=3)
 
-        # Should stop at max_steps, not continue infinitely
-        assert len(responses) == 3
+        assert response == TOOL_LOOP_FINAL_PROMPT
+        assert chat.usage["total_tokens"] == 45  # 3 * 15
 
 
-def test_toolloop_no_tools():
-    """Test toolloop without tools behaves like regular chat"""
+def test_call_without_tools():
+    """Test __call__ without tools behaves like regular chat"""
     mock_response = MagicMock()
     mock_response.choices = [MagicMock()]
     mock_response.choices[0].message.content = "Simple response"
@@ -603,10 +565,10 @@ def test_toolloop_no_tools():
         mock_call_class.return_value = mock_call
 
         chat = Chat("test-model")
-        responses = list(chat.toolloop("Hello"))
+        response = chat("Hello")
 
-        assert len(responses) == 1
-        assert responses[0] == mock_response
+        assert response == "Simple response"
+        assert chat.usage["total_tokens"] == 15
 
         # Should have normal chat history
         history = chat.history

@@ -1,9 +1,10 @@
 from fastcore.basics import listify
 from .call import Call
-from .base import BASE_URL
+from .base import BASE_URL, TOOL_LOOP_FINAL_PROMPT
 from .tool import function_to_schema, create_tool_results
 
 
+# TODO: Add streaming
 class Chat:
     """Chat with history tracking, usage tracking, and tool support."""
 
@@ -38,7 +39,7 @@ class Chat:
         self,
         message: str | list[str],
         tools: list = None,
-        max_steps: int = 10,
+        max_steps: int = 100,
         extra_headers: dict = {},
         extra_body: dict = {},
         **kwargs,
@@ -55,39 +56,97 @@ class Chat:
         **kwargs are passed to the API chat completion call. Common parameters include `temperature` and `max_tokens`.
         :returns: Single response or list based on model count
         """
-        if tools:
-            # Multi-round tool calling
-            list(
-                self.toolloop(
-                    message=message,
-                    tools=tools,
-                    max_steps=max_steps,
+        user_message = self.call.construct_user_message(message=message)
+        for model in self.models:
+            self._history[model].append(user_message)
+
+        tool_schemas = (
+            [function_to_schema(func=func) for func in tools] if tools else None
+        )
+
+        responses = {}
+        for model in self.models:
+            # Tool loop
+            if tools:
+                step = 0
+                while step < max_steps:
+                    assistant_msg = self._process_response(
+                        model=model,
+                        extra_headers=extra_headers,
+                        extra_body=extra_body,
+                        tool_schemas=tool_schemas,
+                        **kwargs,
+                    )
+                    if assistant_msg.get("tool_calls") and tools:
+                        tool_results = create_tool_results(
+                            tool_calls=assistant_msg["tool_calls"], funcs=tools
+                        )
+                        self._history[model].extend(tool_results)
+                        step += 1
+                    else:
+                        responses[model] = assistant_msg["content"]
+                        break
+                else:
+                    responses[model] = TOOL_LOOP_FINAL_PROMPT
+            # Simple response
+            else:
+                assistant_msg = self._process_response(
+                    model=model,
                     extra_headers=extra_headers,
                     extra_body=extra_body,
+                    tool_schemas=tool_schemas,
                     **kwargs,
                 )
-            )
-        else:
-            # Simple single API call (no tools)
-            self._simple_call(
-                message=message,
-                extra_headers=extra_headers,
-                extra_body=extra_body,
-                **kwargs,
-            )
+                responses[model] = assistant_msg["content"]
 
-        return self._get_final_outputs()
+        return responses[self.models[0]] if len(self.models) == 1 else responses
 
     def update_token_usage(self, resp, model: str):
         """Update token usage for a model.
 
         :param resp: ChatCompletion object
+        :param model: Model name
         """
         if hasattr(resp, "usage") and resp.usage:
             usage = resp.usage
             self._usage[model]["prompt_tokens"] += usage.prompt_tokens
             self._usage[model]["completion_tokens"] += usage.completion_tokens
             self._usage[model]["total_tokens"] += usage.total_tokens
+
+    def _process_response(
+        self,
+        model: str,
+        extra_headers: dict,
+        extra_body: dict,
+        tool_schemas: list,
+        **kwargs,
+    ) -> dict:
+        """Get API response, update history/usage and return assistant message.
+
+        :param model: Model name
+        :param extra_headers: Additional headers
+        :param extra_body: Openrouter-only API body parameters.
+        For example, to set the free PDF parser plugin: {"plugins": [{"id": "file-parser", "pdf": {"engine": "pdf-text"}}]}.
+        :param tool_schemas: List of tool schemas
+        **kwargs are passed to the API chat completion call. Common parameters include `temperature` and `max_tokens`.
+        :returns: Assistant message dict
+        """
+        resp = self.call._get_resp(
+            model=model,
+            messages=self._history[model],
+            extra_headers=extra_headers,
+            extra_body=extra_body,
+            raw=True,
+            tools=tool_schemas,
+            **kwargs,
+        )
+        msg = resp.choices[0].message
+        assistant_msg = {"role": "assistant", "content": msg.content or ""}
+        if msg.tool_calls:
+            assistant_msg["tool_calls"] = msg.tool_calls
+        self._history[model].append(assistant_msg)
+        self.update_token_usage(resp=resp, model=model)
+        return assistant_msg
 
     @property
     def history(self) -> list[dict] | dict[str, list[dict]]:
@@ -146,119 +205,3 @@ class Chat:
         """Reset history and usage for all models."""
         self.reset_history()
         self.reset_usage()
-
-    def _execute_tool_calls(self, tool_calls, tools: list, model: str):
-        """Execute tool calls and add results to history.
-
-        :param tool_calls: Tool calls from assistant message
-        :param tools: List of available tool functions
-        :param model: Model name
-        """
-        tool_results = create_tool_results(tool_calls=tool_calls, funcs=tools)
-        self._history[model].extend(tool_results)
-
-    def toolloop(
-        self,
-        message: str | list[str],
-        tools: list = None,
-        max_steps: int = 10,
-        extra_headers: dict = {},
-        extra_body: dict = {},
-        **kwargs,
-    ):
-        """Send message and handle multiple rounds of tool calls.
-
-        :param message: User message or list of strings
-        :param tools: List of functions available for tool calling
-        :param max_steps: Maximum number of tool call iterations
-        :param extra_headers: Additional headers
-        :param extra_body: Additional body parameters
-        :yields: Response at each step of the tool loop
-        """
-        user_message = self.call.construct_user_message(message=message)
-        for model in self.models:
-            self._history[model].append(user_message)
-
-        tool_schemas = (
-            [function_to_schema(func=func) for func in tools] if tools else None
-        )
-
-        for model in self.models:
-            step = 0
-            while step < max_steps:
-                resp = self.call._get_resp(
-                    model=model,
-                    messages=self._history[model],
-                    extra_headers=extra_headers,
-                    extra_body=extra_body,
-                    raw=True,
-                    tools=tool_schemas,
-                    **kwargs,
-                )
-
-                msg = resp.choices[0].message
-                assistant_msg = {"role": "assistant", "content": msg.content or ""}
-                if msg.tool_calls:
-                    assistant_msg["tool_calls"] = msg.tool_calls
-                self._history[model].append(assistant_msg)
-                self.update_token_usage(resp=resp, model=model)
-
-                yield resp
-
-                if msg.tool_calls and tools:
-                    self._execute_tool_calls(
-                        tool_calls=msg.tool_calls,
-                        tools=tools,
-                        model=model,
-                    )
-                    step += 1
-                else:
-                    break
-
-    def _simple_call(
-        self,
-        message: str | list[str],
-        extra_headers: dict = {},
-        extra_body: dict = {},
-        **kwargs,
-    ):
-        """Handle simple chat without tools (single API call).
-
-        :param message: User message or list of strings
-        :param extra_headers: Additional headers
-        :param extra_body: Additional body parameters
-        """
-        user_message = self.call.construct_user_message(message=message)
-        for model in self.models:
-            self._history[model].append(user_message)
-
-        for model in self.models:
-            resp = self.call._get_resp(
-                model=model,
-                messages=self._history[model],
-                extra_headers=extra_headers,
-                extra_body=extra_body,
-                raw=True,
-                **kwargs,
-            )
-
-            msg = resp.choices[0].message
-            assistant_msg = {"role": "assistant", "content": msg.content or ""}
-            self._history[model].append(assistant_msg)
-            self.update_token_usage(resp=resp, model=model)
-
-    def _get_final_outputs(self) -> str | dict[str, str]:
-        """Extract final assistant responses from history.
-
-        :returns: Single response or dict mapping model to response
-        """
-        outputs = {}
-        for model in self.models:
-            for msg in reversed(self._history[model]):
-                if msg["role"] == "assistant" and msg.get("content"):
-                    outputs[model] = msg["content"]
-                    break
-
-        return outputs[self.models[0]] if len(self.models) == 1 else outputs
-
-    # TODO: Add streaming

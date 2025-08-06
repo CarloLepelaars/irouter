@@ -13,6 +13,8 @@ BASE_HEADERS = {
     "X-Title": "irouter",  # Site title for rankings on openrouter.ai.
 }
 
+TOOL_LOOP_FINAL_PROMPT = "You have run out of tool uses. Please summarize what you did in the tool loop to the user. If the goal was not reached please inform the reader that you ran out of steps and what work still needs to be done. The user will decide how to proceed."
+
 
 def get_all_models(slug: bool = True) -> list[str]:
     """Get all models available in the Openrouter API.
