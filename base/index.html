@@ -666,15 +666,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#nb_markdown" class="md-nav__link">
-    <span class="md-ellipsis">
-      nb_markdown
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#history_to_markdown" class="md-nav__link">
     <span class="md-ellipsis">
       history_to_markdown
@@ -811,15 +802,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#nb_markdown" class="md-nav__link">
-    <span class="md-ellipsis">
-      nb_markdown
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#history_to_markdown" class="md-nav__link">
     <span class="md-ellipsis">
       history_to_markdown
@@ -879,22 +861,10 @@
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="n">names</span> <span class="o">=</span> <span class="n">get_all_models</span><span class="p">(</span><span class="n">slug</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="nb">print</span><span class="p">(</span><span class="n">names</span><span class="p">[:</span><span class="mi">3</span><span class="p">])</span>  <span class="c1"># [&#39;GPT-4o&#39;, &#39;Claude 3.5 Sonnet&#39;, ...]</span>
 </code></pre></div>
-<h2 id="nb_markdown">nb_markdown</h2>
-<p>Display markdown in Jupyter notebooks:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">irouter.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">nb_markdown</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">nb_markdown</span><span class="p">(</span><span class="s2">&quot;**Hello** world!&quot;</span><span class="p">)</span>
-</code></pre></div>
 <h2 id="history_to_markdown">history_to_markdown</h2>
 <p>Convert chat history to readable markdown:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">irouter.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">history_to_markdown</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Get markdown string</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="n">markdown</span> <span class="o">=</span> <span class="n">history_to_markdown</span><span class="p">(</span><span class="n">chat</span><span class="o">.</span><span class="n">history</span><span class="p">)</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nb">print</span><span class="p">(</span><span class="n">markdown</span><span class="p">)</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Display directly in Jupyter</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="n">history_to_markdown</span><span class="p">(</span><span class="n">chat</span><span class="o">.</span><span class="n">history</span><span class="p">,</span> <span class="n">ipython</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">irouter.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">history_to_markdown</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">history_to_markdown</span><span class="p">(</span><span class="n">chat</span><span class="o">.</span><span class="n">history</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="detect_content_type">detect_content_type</h2>
 <p>Detect what content is passed. The possible values are:</p>
@@ -919,24 +889,24 @@
 <ol>
 <li>"audio" if item is a local file path and ends with a supported audio extension.</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">irouter.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">detect_content_type</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Image URL detection</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="n">detect_content_type</span><span class="p">(</span><span class="s2">&quot;https://example.com/image.jpg&quot;</span><span class="p">)</span>  <span class="c1"># &quot;image_url&quot;</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Local image detection  </span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="n">detect_content_type</span><span class="p">(</span><span class="s2">&quot;./photo.png&quot;</span><span class="p">)</span>  <span class="c1"># &quot;local_image&quot; (if file exists)</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Text detection</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="n">detect_content_type</span><span class="p">(</span><span class="s2">&quot;Hello world&quot;</span><span class="p">)</span>  <span class="c1"># &quot;text&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">irouter.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">detect_content_type</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Image URL detection</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="n">detect_content_type</span><span class="p">(</span><span class="s2">&quot;https://example.com/image.jpg&quot;</span><span class="p">)</span>  <span class="c1"># &quot;image_url&quot;</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Local image detection  </span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="n">detect_content_type</span><span class="p">(</span><span class="s2">&quot;./photo.png&quot;</span><span class="p">)</span>  <span class="c1"># &quot;local_image&quot; (if file exists)</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Text detection</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="n">detect_content_type</span><span class="p">(</span><span class="s2">&quot;Hello world&quot;</span><span class="p">)</span>  <span class="c1"># &quot;text&quot;</span>
 </code></pre></div>
 <h2 id="encode_base64">encode_base64</h2>
 <p>Encode local images to base64 for API requests:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">irouter.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">encode_base64</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Convert image to base64</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="n">base64_data</span> <span class="o">=</span> <span class="n">encode_base64</span><span class="p">(</span><span class="s2">&quot;path/to/image.jpg&quot;</span><span class="p">)</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nb">print</span><span class="p">(</span><span class="n">base64_data</span><span class="p">[:</span><span class="mi">50</span><span class="p">])</span>  <span class="c1"># First 50 characters of base64 string</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">irouter.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">encode_base64</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Convert image to base64</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="n">base64_data</span> <span class="o">=</span> <span class="n">encode_base64</span><span class="p">(</span><span class="s2">&quot;path/to/image.jpg&quot;</span><span class="p">)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nb">print</span><span class="p">(</span><span class="n">base64_data</span><span class="p">[:</span><span class="mi">50</span><span class="p">])</span>  <span class="c1"># First 50 characters of base64 string</span>
 </code></pre></div>
 
 
