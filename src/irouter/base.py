@@ -1,9 +1,8 @@
 import base64
 from typing import Any
 from pathlib import Path
-from urllib.parse import urlparse
-from IPython.display import Markdown, display
 from fastcore.net import urljson
+from urllib.parse import urlparse
 
 BASE_URL = "https://openrouter.ai/api/v1"
 # By default, irouter is used as Site URL and title for rankings on openrouter.ai.
@@ -81,20 +80,10 @@ def detect_content_type(item: Any) -> str:
     return "text"
 
 
-def nb_markdown(msg: str) -> str:
-    """Display markdown in Jupyter notebooks.
-
-    :param msg: Message to display.
-    :returns: Displayed message.
-    """
-    return display(Markdown(msg))
-
-
-def history_to_markdown(history: dict, ipython: bool = False) -> str:
+def history_to_markdown(history: dict) -> str:
     """Convert Chat history to markdown.
 
     :param history: History from Chat object
-    :param ipython: If true display as markdown in Jupyter notebooks.
     :returns: String showing the conversation history.
     """
     md = []
@@ -109,5 +98,4 @@ def history_to_markdown(history: dict, ipython: bool = False) -> str:
             md.append(f"**System:** {content}")
         else:
             md.append(f"**{role}:** {content}")
-    joined = "\n\n".join(md)
-    return nb_markdown(joined) if ipython else joined
+    return "\n\n".join(md)

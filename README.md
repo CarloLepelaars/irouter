@@ -206,15 +206,6 @@ get_all_models()
 # ['llm_provider1/model1', ... 'llm_providerx/modelx']
 ```
 
-#### `history_to_markdown`
-
-Convert chat history to markdown for display in Jupyter notebooks.
-
-```python
-from irouter.base import history_to_markdown
-history_to_markdown(c.history, ipython=True)
-```
-
 ## Credits
 
 This project is built on top of the [OpenRouter](https://openrouter.ai) API infrastructure, which provides access to LLMs through a unified interface.

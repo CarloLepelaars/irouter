@@ -1,6 +1,6 @@
 [project]
 name = "irouter"
-version = "0.1.6"
+version = "0.1.7"
 description = "Easy access to 100s of LLMs with a few lines of code (using Openrouter)."
 authors = [
     {name = "Carlo Lepelaars", email = "info@carlolepelaars.nl"},
@@ -12,7 +12,6 @@ requires-python = ">=3.10,<4"
 dependencies = [
     "fastcore>=1.8.7",
     "openai>=1.99.1",
-    "ipython>=8.37.0",
 ]
 
 [project.optional-dependencies]
@@ -24,6 +23,7 @@ dev = [
     "mkdocstrings-python>=1.7.1",
     "pytest>=7.2.0",
     "griffe>=0.36.4",
+    "ipython>=8.37.0",
 ]
 
 [tool.pytest.ini_options]

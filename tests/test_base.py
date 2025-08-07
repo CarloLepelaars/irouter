@@ -3,7 +3,6 @@ from unittest.mock import patch, mock_open
 from irouter.base import (
     get_all_models,
     history_to_markdown,
-    nb_markdown,
     detect_content_type,
     encode_base64,
 )
@@ -37,12 +36,8 @@ def test_history_to_markdown():
     expected = (
         "**System:** You are helpful\n\n**User:** Hello\n\n**Assistant:** Hi there!"
     )
-    result = history_to_markdown(history, ipython=False)
+    result = history_to_markdown(history)
     assert result == expected
-
-    with patch("irouter.base.display") as mock_display:
-        nb_markdown("test")
-        mock_display.assert_called_once()
 
 
 def test_detect_content_type():
