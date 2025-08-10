@@ -34,6 +34,7 @@ class Chat:
             m: {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0}
             for m in self.models
         }
+        self.web_citations = []
 
     def __call__(
         self,
@@ -146,7 +147,26 @@ class Chat:
             assistant_msg["tool_calls"] = msg.tool_calls
         self._history[model].append(assistant_msg)
         self.update_token_usage(resp=resp, model=model)
+        self.add_web_citations(resp=resp)
         return assistant_msg
+
+    def add_web_citations(self, resp):
+        """Add web citations to state (web_citations).
+
+        :param resp: ChatCompletion object
+        """
+        if not resp.choices[0].message.annotations:
+            return
+        self.web_citations.extend(
+            [
+                {
+                    k: v
+                    for k, v in dict(annot.url_citation).items()
+                    if k not in ("start_index", "end_index")
+                }
+                for annot in resp.choices[0].message.annotations
+            ]
+        )
 
     @property
     def history(self) -> list[dict] | dict[str, list[dict]]:

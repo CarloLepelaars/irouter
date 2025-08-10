@@ -320,3 +320,49 @@ def test_call_with_pdf():
             == "data:application/pdf;base64,base64pdf"
         )
         assert user_message["content"][1]["type"] == "text"
+
+
+def test_call_with_web_online_tag():
+    mock_response = MagicMock()
+    mock_response.choices = [MagicMock()]
+    mock_response.choices[0].message.content = "Web search response"
+
+    with patch("irouter.call.OpenAI") as mock_openai:
+        mock_client = MagicMock()
+        mock_client.chat.completions.create.return_value = mock_response
+        mock_openai.return_value = mock_client
+
+        call = Call("openai/gpt-4o:online")
+        result = call("What is the latest news about AI?")
+
+        assert result == "Web search response"
+        call_args = mock_client.chat.completions.create.call_args
+        assert call_args[1]["model"] == "openai/gpt-4o:online"
+
+
+def test_call_with_web_plugin():
+    mock_response = MagicMock()
+    mock_response.choices = [MagicMock()]
+    mock_response.choices[0].message.content = "Web plugin response"
+
+    with patch("irouter.call.OpenAI") as mock_openai:
+        mock_client = MagicMock()
+        mock_client.chat.completions.create.return_value = mock_response
+        mock_openai.return_value = mock_client
+
+        call = Call("openai/gpt-4o")
+        extra_body = {
+            "plugins": [
+                {
+                    "id": "web",
+                    "max_results": 5,
+                    "search_prompt": "Only trustworthy sources"
+                }
+            ]
+        }
+        result = call("Search for latest AI developments", extra_body=extra_body)
+
+        assert result == "Web plugin response"
+        call_args = mock_client.chat.completions.create.call_args
+        assert call_args[1]["extra_body"]["plugins"][0]["id"] == "web"
+        assert call_args[1]["extra_body"]["plugins"][0]["max_results"] == 5

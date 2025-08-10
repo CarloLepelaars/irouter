@@ -48,6 +48,7 @@ nav:
   - Image: img.md
   - PDF: pdf.md
   - Audio: audio.md
+  - Web: web.md
   - Multimodal: multimodal.md
   - Tool: tool.md
   - Base: base.md

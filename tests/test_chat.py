@@ -643,3 +643,214 @@ def test_call_with_multiround_tools():
         # Should have: system, user, assistant (tool call), tool result, assistant (tool call), tool result, assistant (final)
         assert len(history) >= 7
         assert history[-1]["content"] == "Final result is 7"
+
+
+def test_chat_with_web_online_tag():
+    mock_response = MagicMock()
+    mock_response.choices = [MagicMock()]
+    mock_response.choices[0].message.content = "Web search response"
+    mock_response.choices[0].message.tool_calls = None
+    mock_response.choices[0].message.annotations = None
+    mock_response.usage = MagicMock()
+    mock_response.usage.prompt_tokens = 15
+    mock_response.usage.completion_tokens = 20
+    mock_response.usage.total_tokens = 35
+
+    with patch("irouter.chat.Call") as mock_call_class:
+        mock_call = MagicMock()
+        mock_call._get_resp = Mock(return_value=mock_response)
+        mock_call.construct_user_message = Mock(
+            return_value={"role": "user", "content": "What is the latest AI news?"}
+        )
+        mock_call_class.return_value = mock_call
+
+        chat = Chat("openai/gpt-4o:online")
+        result = chat("What is the latest AI news?")
+
+        assert result == "Web search response"
+        assert len(chat.web_citations) == 0  # No annotations in this mock
+
+
+def test_chat_with_web_plugin():
+    mock_response = MagicMock()
+    mock_response.choices = [MagicMock()]
+    mock_response.choices[0].message.content = "Web plugin response"
+    mock_response.choices[0].message.tool_calls = None
+    mock_response.choices[0].message.annotations = None
+    mock_response.usage = MagicMock()
+    mock_response.usage.prompt_tokens = 12
+    mock_response.usage.completion_tokens = 18
+    mock_response.usage.total_tokens = 30
+
+    with patch("irouter.chat.Call") as mock_call_class:
+        mock_call = MagicMock()
+        mock_call._get_resp = Mock(return_value=mock_response)
+        mock_call.construct_user_message = Mock(
+            return_value={"role": "user", "content": "Search for AI developments"}
+        )
+        mock_call_class.return_value = mock_call
+
+        chat = Chat("openai/gpt-4o")
+        extra_body = {
+            "plugins": [
+                {
+                    "id": "web",
+                    "max_results": 10,
+                    "search_prompt": "Only trustworthy sources"
+                }
+            ]
+        }
+        result = chat("Search for AI developments", extra_body=extra_body)
+
+        assert result == "Web plugin response"
+        assert chat.usage["total_tokens"] == 30
+
+
+def test_chat_web_citations_tracking():
+    # Mock annotation object
+    mock_annotation = MagicMock()
+    mock_annotation.url_citation = {
+        "title": "AI News Article",
+        "url": "https://example.com/ai-news",
+        "content": "Latest AI developments...",
+        "start_index": 10,
+        "end_index": 50
+    }
+
+    mock_response = MagicMock()
+    mock_response.choices = [MagicMock()]
+    mock_response.choices[0].message.content = "Based on recent sources, AI is advancing rapidly."
+    mock_response.choices[0].message.tool_calls = None
+    mock_response.choices[0].message.annotations = [mock_annotation]
+    mock_response.usage = MagicMock()
+    mock_response.usage.prompt_tokens = 20
+    mock_response.usage.completion_tokens = 25
+    mock_response.usage.total_tokens = 45
+
+    with patch("irouter.chat.Call") as mock_call_class:
+        mock_call = MagicMock()
+        mock_call._get_resp = Mock(return_value=mock_response)
+        mock_call.construct_user_message = Mock(
+            return_value={"role": "user", "content": "What's new in AI?"}
+        )
+        mock_call_class.return_value = mock_call
+
+        chat = Chat("openai/gpt-4o:online")
+        result = chat("What's new in AI?")
+
+        assert result == "Based on recent sources, AI is advancing rapidly."
+        
+        # Test web citations are properly tracked
+        assert len(chat.web_citations) == 1
+        citation = chat.web_citations[0]
+        assert citation["title"] == "AI News Article"
+        assert citation["url"] == "https://example.com/ai-news"
+        assert citation["content"] == "Latest AI developments..."
+        
+        # Test that start_index and end_index are filtered out
+        assert "start_index" not in citation
+        assert "end_index" not in citation
+
+
+def test_chat_web_citations_multiple():
+    # Mock multiple annotation objects
+    mock_annotation1 = MagicMock()
+    mock_annotation1.url_citation = {
+        "title": "First AI Article",
+        "url": "https://example1.com",
+        "content": "First content...",
+        "start_index": 0,
+        "end_index": 20
+    }
+
+    mock_annotation2 = MagicMock()
+    mock_annotation2.url_citation = {
+        "title": "Second AI Article", 
+        "url": "https://example2.com",
+        "content": "Second content...",
+        "start_index": 30,
+        "end_index": 60
+    }
+
+    mock_response = MagicMock()
+    mock_response.choices = [MagicMock()]
+    mock_response.choices[0].message.content = "AI research shows multiple developments."
+    mock_response.choices[0].message.tool_calls = None
+    mock_response.choices[0].message.annotations = [mock_annotation1, mock_annotation2]
+    mock_response.usage = MagicMock()
+    mock_response.usage.prompt_tokens = 25
+    mock_response.usage.completion_tokens = 30
+    mock_response.usage.total_tokens = 55
+
+    with patch("irouter.chat.Call") as mock_call_class:
+        mock_call = MagicMock()
+        mock_call._get_resp = Mock(return_value=mock_response)
+        mock_call.construct_user_message = Mock(
+            return_value={"role": "user", "content": "Latest AI research?"}
+        )
+        mock_call_class.return_value = mock_call
+
+        chat = Chat("openai/gpt-4o:online")
+        result = chat("Latest AI research?")
+
+        assert result == "AI research shows multiple developments."
+        
+        # Test multiple web citations are tracked
+        assert len(chat.web_citations) == 2
+        
+        citation1 = chat.web_citations[0]
+        assert citation1["title"] == "First AI Article"
+        assert citation1["url"] == "https://example1.com"
+        
+        citation2 = chat.web_citations[1]
+        assert citation2["title"] == "Second AI Article"
+        assert citation2["url"] == "https://example2.com"
+
+
+def test_chat_web_citations_accumulate():
+    # Test that web citations accumulate across multiple calls
+    def create_mock_response(title, url):
+        mock_annotation = MagicMock()
+        mock_annotation.url_citation = {
+            "title": title,
+            "url": url,
+            "content": "Content...",
+            "start_index": 0,
+            "end_index": 10
+        }
+        
+        mock_response = MagicMock()
+        mock_response.choices = [MagicMock()]
+        mock_response.choices[0].message.content = f"Response about {title}"
+        mock_response.choices[0].message.tool_calls = None
+        mock_response.choices[0].message.annotations = [mock_annotation]
+        mock_response.usage = MagicMock()
+        mock_response.usage.prompt_tokens = 10
+        mock_response.usage.completion_tokens = 15
+        mock_response.usage.total_tokens = 25
+        return mock_response
+
+    with patch("irouter.chat.Call") as mock_call_class:
+        mock_call = MagicMock()
+        mock_call._get_resp = Mock(side_effect=[
+            create_mock_response("Article 1", "https://site1.com"),
+            create_mock_response("Article 2", "https://site2.com")
+        ])
+        mock_call.construct_user_message = Mock(side_effect=[
+            {"role": "user", "content": "First query"},
+            {"role": "user", "content": "Second query"}
+        ])
+        mock_call_class.return_value = mock_call
+
+        chat = Chat("openai/gpt-4o:online")
+        
+        # First call
+        result1 = chat("First query")
+        assert len(chat.web_citations) == 1
+        assert chat.web_citations[0]["title"] == "Article 1"
+        
+        # Second call should accumulate citations
+        result2 = chat("Second query")
+        assert len(chat.web_citations) == 2
+        assert chat.web_citations[0]["title"] == "Article 1"
+        assert chat.web_citations[1]["title"] == "Article 2"
