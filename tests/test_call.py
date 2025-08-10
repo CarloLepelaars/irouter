@@ -356,7 +356,7 @@ def test_call_with_web_plugin():
                 {
                     "id": "web",
                     "max_results": 5,
-                    "search_prompt": "Only trustworthy sources"
+                    "search_prompt": "Only trustworthy sources",
                 }
             ]
         }
