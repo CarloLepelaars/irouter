@@ -1,4 +1,5 @@
 from fastcore.basics import listify
+from fastcore.parallel import parallel
 from .call import Call
 from .base import BASE_URL, TOOL_LOOP_FINAL_PROMPT
 from .tool import function_to_schema, create_tool_results
@@ -65,12 +66,10 @@ class Chat:
             [function_to_schema(func=func) for func in tools] if tools else None
         )
 
-        responses = {}
-        for model in self.models:
+        def process_model(model):
             # Tool loop
             if tools:
-                step = 0
-                while step < max_steps:
+                for step in range(max_steps):
                     assistant_msg = self._process_response(
                         model=model,
                         extra_headers=extra_headers,
@@ -83,13 +82,9 @@ class Chat:
                             tool_calls=assistant_msg["tool_calls"], funcs=tools
                         )
                         self._history[model].extend(tool_results)
-                        step += 1
                     else:
-                        responses[model] = assistant_msg["content"]
-                        break
-                else:
-                    responses[model] = TOOL_LOOP_FINAL_PROMPT
-            # Simple response
+                        return assistant_msg["content"]
+                return TOOL_LOOP_FINAL_PROMPT
             else:
                 assistant_msg = self._process_response(
                     model=model,
@@ -98,9 +93,16 @@ class Chat:
                     tool_schemas=tool_schemas,
                     **kwargs,
                 )
-                responses[model] = assistant_msg["content"]
+                return assistant_msg["content"]
 
-        return responses[self.models[0]] if len(self.models) == 1 else responses
+        responses_list = parallel(
+            process_model, self.models, threadpool=True, progress=len(self.models) > 1
+        )
+        return (
+            responses_list[0]
+            if len(self.models) == 1
+            else dict(zip(self.models, responses_list))
+        )
 
     def update_token_usage(self, resp, model: str):
         """Update token usage for a model.

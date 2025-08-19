@@ -3,6 +3,7 @@ from pathlib import Path
 from openai import OpenAI
 from openai.types.chat import ChatCompletion
 from fastcore.basics import listify
+from fastcore.parallel import parallel
 
 from .base import BASE_URL, BASE_HEADERS, detect_content_type, encode_base64
 
@@ -32,7 +33,6 @@ class Call:
             api_key=api_key or os.getenv("OPENROUTER_API_KEY"), base_url=base_url
         )
 
-    # TODO: Add Streaming support.
     def __call__(
         self,
         message: str | list[str] | list[dict],
@@ -63,8 +63,8 @@ class Call:
         else:
             inp = message
 
-        resps = {
-            model: self._get_resp(
+        def get_resp(model):
+            return self._get_resp(
                 model=model,
                 messages=inp,
                 extra_headers=extra_headers,
@@ -72,9 +72,14 @@ class Call:
                 raw=raw,
                 **kwargs,
             )
-            for model in self.models
-        }
-        return resps[self.models[0]] if len(self.models) == 1 else resps
+
+        resps = parallel(
+            f=get_resp,
+            items=self.models,
+            threadpool=True,
+            progress=len(self.models) > 1,
+        )
+        return resps[0] if len(self.models) == 1 else dict(zip(self.models, resps))
 
     def construct_user_message(self, message: str | list[str] | dict) -> dict:
         """Construct a user message dict from various input types.
