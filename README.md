@@ -144,7 +144,7 @@ c(["https://proceedings.neurips.cc/paper_files/paper/2017/file/3f5ee243547dee91f
 
 ### Audio
 
-Some LLMs have native audio support. Simply pass a local filepath that points to a `.mp3` or `.wav` file with an instruction as a list of strings.
+Some LLMs have native audio support. Simply pass an URL or local filepath that points to a `.mp3` or `.wav` file with an instruction as a list of strings.
 
 ```python
 from irouter import Call
