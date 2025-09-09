@@ -4,8 +4,15 @@ from openai import OpenAI
 from openai.types.chat import ChatCompletion
 from fastcore.basics import listify
 from fastcore.parallel import parallel
+from fastcore.net import urlclean
 
-from .base import BASE_URL, BASE_HEADERS, detect_content_type, encode_base64
+from .base import (
+    BASE_URL,
+    BASE_HEADERS,
+    detect_content_type,
+    encode_base64,
+    download_and_encode_url,
+)
 
 
 class Call:
@@ -115,7 +122,7 @@ class Call:
                         },
                     }
                 )
-            elif content_type == "audio":
+            elif content_type == "local_audio":
                 content.append(
                     {
                         "type": "input_audio",
@@ -142,6 +149,18 @@ class Call:
                         "file": {
                             "filename": "document.pdf",
                             "file_data": clean_m,
+                        },
+                    }
+                )
+            elif content_type == "audio_url":
+                content.append(
+                    {
+                        "type": "input_audio",
+                        "input_audio": {
+                            "data": download_and_encode_url(clean_m),
+                            "format": Path(urlclean(clean_m))
+                            .suffix.lower()
+                            .lstrip("."),
                         },
                     }
                 )

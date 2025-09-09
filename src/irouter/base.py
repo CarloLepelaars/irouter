@@ -1,7 +1,7 @@
 import base64
 from typing import Any
 from pathlib import Path
-from fastcore.net import urljson
+from fastcore.net import urljson, urlread
 from urllib.parse import urlparse
 
 BASE_URL = "https://openrouter.ai/api/v1"
@@ -35,6 +35,16 @@ def encode_base64(path: str) -> str:
         return base64.b64encode(file.read()).decode("utf-8")
 
 
+def download_and_encode_url(url: str) -> str:
+    """Download URL content and encode to base64.
+
+    :param url: URL to download.
+    :returns: Base64 encoded content.
+    """
+    binary_data = urlread(url, decode=False)
+    return base64.b64encode(binary_data).decode("utf-8")
+
+
 def detect_content_type(item: Any) -> str:
     """Detect content type of item.
     Options are:
@@ -46,7 +56,8 @@ def detect_content_type(item: Any) -> str:
     4. "pdf_url" if item is a URL and ends with a PDF extension.
     5. "local_pdf" if item is a local file path and ends with a PDF extension.
     Audio:
-    6. "audio" if item is a local file path and ends with a supported audio extension.
+    6. "audio_url" if item is a URL and ends with a supported audio extension.
+    7. "local_audio" if item is a local file path and ends with a supported audio extension.
 
     :param item: Item to detect content type of.
     :returns: Content type of item.
@@ -62,6 +73,8 @@ def detect_content_type(item: Any) -> str:
                 return "image_url"
             elif suffix == ".pdf":
                 return "pdf_url"
+            elif suffix in SUPPORTED_AUDIO_EXTENSIONS:
+                return "audio_url"
         # Local files
         else:
             if (
@@ -76,7 +89,7 @@ def detect_content_type(item: Any) -> str:
                 elif suffix in SUPPORTED_IMAGE_EXTENSIONS:
                     return "local_image"
                 elif suffix in SUPPORTED_AUDIO_EXTENSIONS:
-                    return "audio"
+                    return "local_audio"
     return "text"
 
 

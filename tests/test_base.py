@@ -51,13 +51,17 @@ def test_detect_content_type():
     assert detect_content_type("https://example.com/page.html") == "text"
     assert detect_content_type("https://example.com/doc.pdf") == "pdf_url"
 
+    # Test audio URLs
+    assert detect_content_type("https://example.com/audio.mp3") == "audio_url"
+    assert detect_content_type("https://site.com/voice.wav") == "audio_url"
+
     # Test local images and audio (mock file existence)
     with patch("irouter.base.Path.exists", return_value=True):
         assert detect_content_type("local_image.jpg") == "local_image"
         assert detect_content_type("./folder/pic.png") == "local_image"
         assert detect_content_type("/path/to/image.webp") == "local_image"
-        assert detect_content_type("audio.mp3") == "audio"
-        assert detect_content_type("./sounds/voice.wav") == "audio"
+        assert detect_content_type("audio.mp3") == "local_audio"
+        assert detect_content_type("./sounds/voice.wav") == "local_audio"
 
     # Test non-existent local files
     with patch("irouter.base.Path.exists", return_value=False):

@@ -82,7 +82,7 @@ def test_construct_content():
             "image_url",
             "text",
             "local_image",
-            "audio",
+            "local_audio",
             "local_pdf",
             "pdf_url",
         ]
@@ -265,7 +265,7 @@ def test_call_with_audio():
         mock_client.chat.completions.create.return_value = mock_response
         mock_openai.return_value = mock_client
 
-        mock_detect.side_effect = ["audio", "text"]
+        mock_detect.side_effect = ["local_audio", "text"]
 
         call = Call("test-model")
         result = call(["audio.mp3", "Transcribe this audio"])
@@ -366,3 +366,62 @@ def test_call_with_web_plugin():
         call_args = mock_client.chat.completions.create.call_args
         assert call_args[1]["extra_body"]["plugins"][0]["id"] == "web"
         assert call_args[1]["extra_body"]["plugins"][0]["max_results"] == 5
+
+
+def test_call_with_audio_url():
+    mock_response = MagicMock()
+    mock_response.choices = [MagicMock()]
+    mock_response.choices[0].message.content = "Audio URL transcription"
+
+    with (
+        patch("irouter.call.OpenAI") as mock_openai,
+        patch("irouter.call.detect_content_type") as mock_detect,
+        patch("irouter.call.download_and_encode_url", return_value="base64audiourl"),
+    ):
+        mock_client = MagicMock()
+        mock_client.chat.completions.create.return_value = mock_response
+        mock_openai.return_value = mock_client
+
+        mock_detect.side_effect = ["audio_url", "text"]
+
+        call = Call("test-model")
+        result = call(
+            [
+                "https://www.bird-sounds.net/birdmedia/241/860.mp3",
+                "Transcribe this audio",
+            ]
+        )
+
+        assert result == "Audio URL transcription"
+
+        # Verify the message structure sent to API
+        call_args = mock_client.chat.completions.create.call_args
+        messages = call_args[1]["messages"]
+
+        user_message = messages[0]
+        assert user_message["role"] == "user"
+        assert len(user_message["content"]) == 2
+        assert user_message["content"][0]["type"] == "input_audio"
+        assert user_message["content"][0]["input_audio"]["data"] == "base64audiourl"
+        assert user_message["content"][0]["input_audio"]["format"] == "mp3"
+        assert user_message["content"][1]["type"] == "text"
+
+    # Test with WAV URL
+    with (
+        patch("irouter.call.OpenAI") as mock_openai,
+        patch("irouter.call.detect_content_type") as mock_detect,
+        patch("irouter.call.download_and_encode_url", return_value="base64wav"),
+    ):
+        mock_client = MagicMock()
+        mock_client.chat.completions.create.return_value = mock_response
+        mock_openai.return_value = mock_client
+
+        mock_detect.side_effect = ["audio_url", "text"]
+
+        call = Call("test-model")
+        result = call(["https://example.com/audio.wav", "What is said?"])
+
+        call_args = mock_client.chat.completions.create.call_args
+        messages = call_args[1]["messages"]
+        user_message = messages[0]
+        assert user_message["content"][0]["input_audio"]["format"] == "wav"
